@@ -1,0 +1,132 @@
+
+:root {
+ 
+  --bg: #0b0c10;
+  --surface: #111217;
+  --surface-2: #151824;
+  --line: #1c2236;
+
+  --text: #e6e6f0;
+  --muted: #a0a3ad;
+
+ 
+  --accent: #9a7bff; 
+  --shadow-1: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-accent: 0 0 24px color-mix(in oklab, var(--accent) 40%, transparent);
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 20px;
+  --fs-xl: 28px;
+  --fs-2xl: 36px;
+  --font: ui-sans-serif, system-ui, Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+a {
+  color: var(--text);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent);
+}
+.container {
+  width: min(1200px, 92vw);
+  margin: 0 auto;
+}
+
+.u-flex {
+  display: flex;
+}
+.u-center {
+  display: grid;
+  place-items: center;
+}
+.u-gap-4 {
+  gap: var(--s-4);
+}
+.u-gap-6 {
+  gap: var(--s-6);
+}
+.u-muted {
+  color: var(--muted);
+}
+
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  background: var(--surface-2);
+  color: var(--text);
+  transition: 180ms ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-1);
+}
+.btn--accent {
+  background: color-mix(in oklab, var(--accent) 18%, var(--surface-2));
+  border-color: var(--accent);
+  box-shadow: var(--shadow-accent);
+}
+.btn--accent:hover {
+  box-shadow: 0 0 32px var(--accent);
+}
+
+.input,
+input,
+select,
+textarea {
+  width: 100%;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid #24283b;
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  outline: none;
+}
+.input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-accent);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+
+.hr {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #22263a, transparent);
+  border: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
