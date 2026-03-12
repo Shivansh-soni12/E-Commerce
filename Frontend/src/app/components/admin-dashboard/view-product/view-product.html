@@ -1,0 +1,29 @@
+<h1 class="dashboard-title">📦 Products</h1>
+
+<div class="controls">
+  <input
+    type="text"
+    placeholder="Search products..."
+    [(ngModel)]="searchTerm"
+  />
+
+  <select [(ngModel)]="sortCategory">
+    <option value="">All Categories</option>
+    <option value="Electronics">Electronics</option>
+    <option value="Clothing">Clothing</option>
+    <option value="Books">Books</option>
+    <!-- add more categories as needed -->
+  </select>
+</div>
+
+<div class="card-container">
+  <div class="card" *ngFor="let p of filteredProducts">
+    <img [src]="'http://localhost:5000' + p.imageUrl" 
+         style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">
+         
+    <h3 class="product-name">{{ p.name }}</h3>
+    <p class="description">{{ p.description }}</p>
+    <p class="price">₹{{ p.price | number:'1.2-2' }}</p>
+    <p class="category">{{ p.category || 'Uncategorized' }}</p>
+  </div>
+</div>

@@ -1,0 +1,139 @@
+.dashboard-title {
+  margin: 0 0 14px;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: 0.3px;
+  text-shadow: 0 0 14px color-mix(in oklab, var(--accent) 30%, transparent);
+  text-align: center;  
+}
+
+/* -----------------------------------
+   Controls: Search + Category Filter
+----------------------------------- */
+.controls {
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* align vertically */
+  gap: 16px;                 /* spacing between input and select */
+  margin: 0 auto 20px;       /* spacing below the controls */
+  max-width: 800px;          /* keeps them from stretching too wide */
+}
+
+.controls input,
+.controls select {
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #24283b;
+  background: var(--surface-2);
+  color: var(--text);
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.controls input {
+  flex: 2; /* search bar wider */
+}
+
+.controls select {
+  flex: 1; /* dropdown narrower */
+  cursor: pointer;
+}
+
+/* Focus glow */
+.controls input:focus,
+.controls select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 640px) {
+  .controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  .controls input,
+  .controls select {
+    width: 100%;
+  }
+}
+
+/* -----------------------------------
+   Card container should span full width
+----------------------------------- */
+.card-container {
+  width: 100%;                          
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+  gap: 16px;
+  align-items: start;
+  margin-inline: auto;                   
+  padding: 16px;
+  min-width: 0;                          
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid #1b2033;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 0 18px rgba(0,0,0,0.35);
+
+  display: grid;
+  grid-template-rows: auto auto auto auto; /* header, desc, price, category */
+  gap: 10px;
+
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  overflow: hidden; /* visual polish */
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+.product-name {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: whitesmoke;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 14px;
+  color: whitesmoke;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 16px;
+  color: #6a1b9a; /* purple accent */
+  margin-bottom: 6px;
+}
+
+.category {
+  font-size: 13px;
+  color: whitesmoke;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive tuning */
+@media (max-width: 900px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .card-container {
+    grid-template-columns: 1fr; /* single column on small screens */
+  }
+}
