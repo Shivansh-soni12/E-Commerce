@@ -1,0 +1,64 @@
+<div class="form-card">
+  <h3 class="form-title">✏️ Edit Product</h3>
+
+  <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="admin-form">
+    
+    <label>
+      Product Name
+      <input type="text" [(ngModel)]="product.name" name="name" required minlength="3" #name="ngModel" />
+    </label>
+    <div class="error" *ngIf="name.invalid && name.touched">
+      <small *ngIf="name.errors?.['required']">Name is required.</small>
+      <small *ngIf="name.errors?.['minlength']">Name must be at least 3 characters.</small>
+    </div>
+
+    <label>
+      Description
+      <textarea [(ngModel)]="product.description" name="description" required minlength="5" #desc="ngModel"></textarea>
+    </label>
+    <div class="error" *ngIf="desc.invalid && desc.touched">
+      <small *ngIf="desc.errors?.['required']">Description is required.</small>
+      <small *ngIf="desc.errors?.['minlength']">Description must be at least 5 characters.</small>
+    </div>
+
+    <label>
+      Price
+      <input type="number" [(ngModel)]="product.price" name="price" required min="1" #price="ngModel" />
+    </label>
+    <div class="error" *ngIf="price.invalid && price.touched">
+      <small *ngIf="price.errors?.['required']">Price is required.</small>
+      <small *ngIf="price.errors?.['min']">Price must be greater than 0.</small>
+    </div>
+
+    <label>
+      Category
+      <select [(ngModel)]="product.category" name="category">
+        <option value="">-- No Category --</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Computers">Computers</option>
+        <option value="Wearables">Wearables</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Mobiles">Mobiles</option>
+      </select>
+    </label>
+
+    <div class="image-upload-section" style="margin-top: 15px; border-top: 1px solid #eee; pt: 10px;">
+      <label style="font-weight: bold; display: block; margin-bottom: 8px;">Product Image</label>
+      
+      <div *ngIf="product.imageUrl" style="margin-bottom: 10px;">
+        <small style="color: #666;">Current Preview:</small><br>
+        <img [src]="'http://localhost:3000' + product.imageUrl" 
+             alt="Current Product Image" 
+             style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px; margin-top: 5px;">
+      </div>
+
+      <input type="file" (change)="onFileSelected($event)" accept="image/png, image/jpeg" style="font-size: 0.9rem;" />
+      <p style="font-size: 0.75rem; color: #888; margin-top: 4px;">Leave empty to keep the current image.</p>
+    </div>
+
+    <div class="form-actions" style="margin-top: 20px;">
+      <button type="submit" class="save-btn" [disabled]="editForm.invalid">💾 Save Changes</button>
+      <button type="button" class="cancel-btn" (click)="onCancel()">❌ Cancel</button>
+    </div>
+  </form>
+</div>
