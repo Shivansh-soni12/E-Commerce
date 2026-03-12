@@ -1,0 +1,116 @@
+<div class="detail-container" *ngIf="order; else notFoundTemplate">
+  
+  <div class="header">
+    <button (click)="goBack()" class="back-btn">← Back to History</button>
+    <div class="header-info">
+      <h1>Order #{{ order.id }}</h1>
+      <span class="badge" [ngClass]="order.status.toLowerCase()">
+        {{ order.status }}
+      </span>
+    </div>
+  </div>
+
+  <div class="timeline-card">
+    <h3>Order Progress</h3>
+    <div class="timeline">
+      <div class="step active">Ordered</div>
+      
+      <div class="step" [class.active]="
+        order.status.toLowerCase() === 'shipped' || 
+        order.status.toLowerCase() === 'delivered' || 
+        order.status.toLowerCase() === 'fulfilled'">
+        Shipped
+      </div>
+      
+      <div class="step" [class.active]="
+        order.status.toLowerCase() === 'delivered' || 
+        order.status.toLowerCase() === 'fulfilled'">
+        Delivered
+      </div>
+    </div>
+  </div>
+
+  <div class="details-grid">
+    <div class="card items-card">
+      <h3>Items in Order</h3>
+      
+      <div class="item-row" *ngFor="let item of order['productDetails'] || order['items']">
+        <img [src]="item.imageUrl || 'https://picsum.photos/200'" alt="{{ item.name }}" class="thumb">
+        
+        <div class="info">
+          <p class="name">{{ item.name }}</p>
+          <p class="qty">Quantity: {{ item.quantity }}</p>
+          <p class="price">{{ (item.priceAtPurchase || item.price || 0) | currency:'INR' }}</p>
+        </div>
+      </div>
+
+      <div class="total-row">
+        <span>Total Amount</span>
+        <span class="big-price">{{ order.totalAmount | currency:'INR' }}</span>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="card info-card">
+        <h3>Shipping Details</h3>
+        
+        <p class="label">Delivery Address</p>
+<p class="value">
+  {{ orderUser?.shippingAddress && orderUser?.shippingAddress !== 'On File' 
+     ? orderUser?.shippingAddress 
+     : (order['shippingAddress'] || 'Address provided at checkout') }}
+</p>
+        
+        <p class="label">Payment Method</p>
+        <p class="value">
+          {{ order['paymentMethod'] || 'Online Payment (Prepaid)' }}
+        </p>
+        
+        <p class="label">Order Date</p>
+        <p class="value">{{ (order.date || order['createdAt']) | date:'medium' }}</p>
+      </div>
+
+      <div class="card actions-card">
+        <h3>Actions</h3>
+        
+        <div *ngIf="order.status.toLowerCase() === 'pending'">
+          
+          <button *ngIf="!showCancelParams" (click)="initiateCancel()" class="btn-danger">
+            Cancel Order
+          </button>
+
+          <div *ngIf="showCancelParams" class="msg-box error-box">
+            <p>Why are you cancelling?</p>
+            <textarea [(ngModel)]="actionReason" class="form-control" placeholder="Optional reason..."></textarea>
+            
+            <div class="msg-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+              <button (click)="submitCancel()" class="btn-confirm-danger">Confirm</button>
+              <button (click)="closeActionBox()" class="btn-ghost">Back</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="order.status.toLowerCase() === 'cancelled'" class="status-msg error">
+          <p>⛔ This order is Cancelled</p>
+        </div>
+
+        <div *ngIf="order.status.toLowerCase() === 'delivered'" class="status-msg success">
+          <p>✓ Order Delivered</p>
+        </div>
+        
+        <div *ngIf="order.status.toLowerCase() === 'shipped'" class="status-msg info">
+          <p>🚚 Your order is on the way!</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #notFoundTemplate>
+  <div class="not-found" style="text-align: center; padding: 50px;">
+    <h2>Order Not Found</h2>
+    <p>We couldn't retrieve the details for this specific order.</p>
+    <button (click)="goBack()" class="back-btn">Go Back</button>
+  </div>
+</ng-template>
