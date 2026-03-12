@@ -1,0 +1,20 @@
+<h2>{{ staticMessage }}</h2>
+
+<div class="layout">
+  <div class="left">
+    <button (click)="toggleForm()" [class.active]="showLogin">
+      {{ showLogin ? 'Need an account? Register' : 'Have an account? Login' }}
+    </button>
+
+    <div *ngIf="showLogin">
+      <app-login-form
+        [welcome]="staticMessage"
+        (loginSuccess)="onLoginSuccess($event)">
+      </app-login-form>
+    </div>
+
+    <div *ngIf="!showLogin">
+      <app-register-form [welcome]="staticMessage"></app-register-form>
+    </div>
+  </div>
+</div>

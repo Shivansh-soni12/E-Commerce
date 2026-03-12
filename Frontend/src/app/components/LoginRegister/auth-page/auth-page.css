@@ -1,0 +1,172 @@
+
+/* Title */
+h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 24px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 18px color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr min(540px, 92vw) 1fr;
+  gap: 32px;
+  width: min(1200px, 96vw);
+  margin-inline: auto;
+  padding: 24px 0;
+}
+
+/* Ensure padding/border don’t cause overflow anywhere inside */
+.layout, .layout * {
+  box-sizing: border-box;
+}
+
+/* LEFT PANEL (Login/Register) — centered */
+.left {
+  grid-column: 2;
+  background: var(--surface);
+  border: 1px solid #1b2033;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 0 24px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+.left > button {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 700;
+  border: 1px solid #1f2440;   /* neutral border */
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;       /* removed box-shadow changes */
+}
+
+/* Minimal hover (no glow, no accent border) */
+.left > button:hover {
+  transform: translateY(-2px);
+  /* keep background/border neutral, no glow */
+}
+
+.left > button.active {
+  background: color-mix(in oklab, var(--accent) 8%, var(--surface-2));
+  /* keep border neutral */
+  border-color: #1f2440;
+  /* no glow */
+}
+
+.right {
+  grid-column: 2;
+  background: var(--surface);
+  border: 1px solid #1b2033;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 0 24px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+
+.signout-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 700;
+  border: 1px solid #1f2440;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+.signout-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+app-login-form,
+app-register-form,
+app-admin-main,
+app-profile-dashboard {
+  display: block;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid #1f2440;
+  box-shadow: inset 0 0 16px rgba(0,0,0,0.35);
+}
+
+/* ----------------------------------------------------------
+   PREVENT INPUT OVERFLOW (no template changes required)
+   ---------------------------------------------------------- */
+.left input,
+.left select,
+.left textarea,
+.left button,
+.left img,
+.left app-login-form *,
+.left app-register-form * {
+  max-width: 100%;
+}
+
+.left input,
+.left select,
+.left textarea {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Optional: ensure form wrappers also respect container width */
+.left app-login-form,
+.left app-register-form {
+  width: 100%;
+}
+
+/* Soft fade/slide animation for ngIf swaps */
+.left > div,
+.right > app-admin-main,
+.right > app-profile-dashboard {
+  animation: fadeIn 240ms ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  .layout { gap: 24px; }
+  h2 { font-size: 28px; }
+}
+@media (max-width: 600px) {
+  .left,
+  .right {
+    padding: 18px;
+    border-radius: 14px;
+  }
+  .left > button,
+  .signout-btn {
+    padding: 10px 14px;
+  }
+}
+
+/* Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .left > div,
+  .right > app-admin-main,
+  .right > app-profile-dashboard {
+    animation: none;
+  }
+}
