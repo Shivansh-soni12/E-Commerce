@@ -1,0 +1,98 @@
+.order-sidebar {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.sidebar-btn {
+  display: block;
+  padding: 12px;
+  color: #aaa;
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.sidebar-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: white;
+}
+
+.sidebar-btn.active {
+  color: #a855f7;
+  border-left-color: #a855f7;
+  background: rgba(168,85,247,0.1);
+}
+
+
+:host {
+  display: block;
+  background-color: #050505; 
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: white;
+}
+h2 {
+  text-align: center;
+  padding-top: 20px;
+}
+.dashboard-stats { 
+  display: flex; 
+  gap: 24px; 
+  padding: 30px; 
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+
+
+
+.stat-card,.stat-card2{ 
+  flex: 1; 
+  min-width: 250px; 
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.1); 
+  border-radius: 16px; 
+  padding: 30px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #a855f7; 
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); 
+}
+
+
+.stat-card2:hover {
+  transform: translateY(-5px);
+  border-color: #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); 
+}
+
+
+.stat-card h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a3a3a3; 
+}
+
+.stat-card2 h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a3a3a3; 
+}
+
+.big-number { 
+  font-size: 3.5rem; 
+  font-weight: 700; 
+  margin: 10px 0 0 0; 
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); 
+}
