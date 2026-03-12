@@ -1,0 +1,82 @@
+
+/* ============================================================
+   EMPTY CART — Neon Dark Theme
+   Matches your entire UI
+   No HTML changes required
+   ============================================================ */
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Wrapper */
+.empty-cart {
+  text-align: center;
+  padding: 40px 20px;
+
+  background: var(--surface);
+  border: 1px solid #1b2033;
+  border-radius: 18px;
+
+  width: min(500px, 90%);
+  margin-inline: auto;
+
+  box-shadow: 0 0 24px rgba(0,0,0,0.35);
+  animation: fadeUp 0.5s ease-out;
+}
+
+/* Title */
+.empty-cart h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 10px;
+
+  text-shadow: 0 0 16px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+/* Description */
+.empty-cart p {
+  font-size: 15px;
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+/* Button */
+.shop-btn {
+  padding: 12px 20px;
+  font-weight: 700;
+  color: var(--text);
+
+  background: color-mix(in oklab, var(--accent) 16%, var(--surface-2));
+  border: 1px solid var(--accent);
+
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 260px;
+
+  transition: 
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.shop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+/* Animation */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile tuning */
+@media (max-width: 480px) {
+  .empty-cart { padding: 30px 16px; }
+  .shop-btn { padding: 10px 16px; }
+}
