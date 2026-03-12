@@ -1,0 +1,21 @@
+<h3>Shopping Cart</h3>
+
+<div class="cart-container">
+  <div *ngFor="let item of cartItems">
+    <div *ngIf="item.quantity > 0" class="cart-card">
+      <h4>{{ item.name }}</h4>
+      <p>Price: ₹{{ item.price }}</p>
+      <p>Quantity: {{ item.quantity }}</p>
+      <p><strong>Subtotal:</strong> ₹{{ item.price * item.quantity }}</p>
+      
+      <div class="cart-actions">
+        <button class="remove-btn" (click)="onRemove(item)">-</button>
+        <button class="add-btn" (click)="onAdd(item)">+</button>
+        <button class="delete-btn" (click)="onDelete(item)">Delete</button>
+        <button class="wishlist-btn" (click)="onAddToWishlist(item)">Add to Wishlist</button>
+        <!-- checkout button removed as requested; order placement is handled in the summary section -->
+      </div>
+    </div>
+  </div>
+
+  
