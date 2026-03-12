@@ -1,0 +1,40 @@
+<div class="form-card">
+  <h3 class="form-title">➕ Add New Product</h3>
+  <form #addForm="ngForm" (ngSubmit)="onSubmit()" class="admin-form">
+    
+    <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="Product Name" required minlength="3" #name="ngModel" />
+    <div class="error" *ngIf="name.invalid && name.touched">
+      <small *ngIf="name.errors?.['required']">Name is required.</small>
+      <small *ngIf="name.errors?.['minlength']">Name must be at least 3 characters.</small>
+    </div>
+
+    <input type="text" [(ngModel)]="newProduct.description" name="description" placeholder="Description" required minlength="5" #desc="ngModel" />
+    <div class="error" *ngIf="desc.invalid && desc.touched">
+      <small *ngIf="desc.errors?.['required']">Description is required.</small>
+      <small *ngIf="desc.errors?.['minlength']">Description must be at least 5 characters.</small>
+    </div>
+
+    <input type="number" [(ngModel)]="newProduct.price" name="price" placeholder="Enter price(₹)" required min="1" #price="ngModel" />
+    <div class="error" *ngIf="price.invalid && price.touched">
+      <small *ngIf="price.errors?.['required']">Price is required.</small>
+      <small *ngIf="price.errors?.['min']">Price must be greater than 0.</small>
+    </div>
+
+    <select [(ngModel)]="newProduct.category" name="category">
+      <option value="">-- No Category --</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Computers">Computers</option>
+      <option value="Wearables">Wearables</option>
+      <option value="Accessories">Accessories</option>
+    </select>
+
+    <div class="input-group" style="margin-top: 15px; margin-bottom: 15px;">
+      <label style="display: block; margin-bottom: 5px; font-weight: bold;">Product Image</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/png, image/jpeg" />
+    </div>
+
+    <button type="submit" [disabled]="addForm.invalid || !selectedFile">
+      Add Product
+    </button>
+  </form>
+</div>
