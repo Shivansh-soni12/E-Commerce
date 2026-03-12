@@ -40,57 +40,28 @@ ngOnInit() {
   this.userService.currentUser$.subscribe((user) => {
     if (user && (user._id || user.id)) {
       this.currentUserId = String(user._id || user.id);
-      console.log("✅ OrderList: User found! Fetching orders for:", this.currentUserId);
+      console.log("✅ OrderList: Fetching for user:", this.currentUserId);
       this.fetchOrders(this.currentUserId);
     } else {
-      console.warn("⚠️ OrderList: Still waiting for user data...");
-
+      console.warn("⚠️ OrderList: Waiting for user session...");
     }
-
   });
-  this.loadOrders();
 }
 
 fetchOrders(userId: string) {
   this.orderMgmt.getOrdersForUser(userId).subscribe({
     next: (data: any[]) => {
       this.zone.run(() => {
-  if (data.length > 0) {
-    const mappedOrders = data.map((order: any) => ({
-      id: order._id || order.id, 
-      status: order.status || 'pending',
-      date: order.createdAt || order.date,
-      totalAmount: order.totalAmount || 0,
-      productDetails: (order.items || order.productDetails || []).map((item: any) => ({
-        name: item.name || 'Unknown Product',
-        quantity: item.quantity || 1,
-imageUrl: item.imageUrl || 'https://via.placeholder.com/150'      }))
-    }));
-
-    setTimeout(() => {
-      this.orders = mappedOrders;
-      console.log("✅ UI Updated with 9 orders");
-      this.cdr.detectChanges(); 
-    });
-  }
-});
-    }
-  });
-}
-
-loadOrders() {
-    const userId = this.route.snapshot.paramMap.get('userId'); 
-
-    if (!userId) {
-      console.error("No userId found in URL path");
-      return;
-    }
-
-    this.orderMgmt.getOrdersForUser(userId).subscribe({
-      next: (data: any[]) => {
-        this.orders = data.map(order => ({
-          ...order,
-          id: order._id || order.id
+        this.orders = data.map((order: any) => ({
+          id: order._id || order.id,
+          status: order.status || 'pending',
+          date: order.createdAt || order.date,
+          totalAmount: order.totalAmount || 0,
+          productDetails: (order.items || []).map((item: any) => ({
+            name: item.name || item.productId?.name || 'Unknown Product',
+            quantity: item.quantity || 1,
+            imageUrl: item.image || item.productId?.image || 'assets/img/default-product.png'
+          }))
         }));
 
         this.totalOrdersCount = this.orders.length;
@@ -99,10 +70,11 @@ loadOrders() {
         ).length;
 
         this.cdr.detectChanges();
-      },
-      error: (err: any) => {
-        console.error("Failed to load orders:", err);
-      }
-    });
-  }
+        console.log(`✅ Loaded ${this.orders.length} orders`);
+      });
+    },
+    error: (err) => console.error("Order fetch failed:", err)
+  });
+}
+
 }
