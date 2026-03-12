@@ -1,0 +1,6 @@
+<app-navbar *ngIf="!currentUser || currentUser.role !== 'admin'"></app-navbar>
+
+<div class="main-container">
+  <router-outlet></router-outlet>
+</div>
+    <app-footer-component></app-footer-component>

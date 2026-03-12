@@ -1,0 +1,24 @@
+<nav class="navbar" *ngIf="currentUser?.role !== 'admin'">
+  
+  <span class="user-info">
+    {{ currentUser ? 'Welcome, ' + currentUser.name : 'Please log in' }}
+  </span>
+
+  <div class="nav-actions">
+    <button routerLink="/home" >Dashboard</button>
+
+    <button *ngIf="!currentUser" routerLink="/login" >Login
+    </button>
+
+    <ng-container *ngIf="currentUser">
+      <button routerLink="/orders" >Orders</button>
+      
+      <button *ngIf="currentUser.role === 'user'" routerLink="/profile" >
+        My Profile
+      </button>
+
+      <button routerLink="/cart" >Cart</button>
+      <button (click)="logout()">Sign Out</button>
+    </ng-container>
+  </div>
+</nav>
