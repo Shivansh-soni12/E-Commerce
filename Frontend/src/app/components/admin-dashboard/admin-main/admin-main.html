@@ -1,0 +1,13 @@
+<div class="navbar">
+  <div class="nav-brand">🛒 Product Manager</div>
+  <div class="nav-links">
+    <a routerLink="products" routerLinkActive="active" class="nav-item">🏠 Products</a>
+    <a routerLink="add" routerLinkActive="active" class="nav-item">➕ Add Product</a>
+    <a routerLink="manage" routerLinkActive="active" class="nav-item">✏️🗑️ Manage Products</a>
+    <button class="logout-btn" (click)="logout()">🚪 Logout</button>
+  </div>
+</div>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
