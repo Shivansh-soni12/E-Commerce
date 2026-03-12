@@ -1,0 +1,60 @@
+<h3>Order Summary</h3>
+
+<div class="summary-container">
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let item of cartItems">
+        <tr *ngIf="item.quantity > 0">
+          <td>{{ item.name }}</td>
+          <td>₹{{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>₹{{ getIndividualTotal(item) }}</td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
+  <div class="price-breakdown">
+    <p>
+        <strong>Original Total:</strong> 
+        <span>₹{{ getOriginalTotal() }}</span>
+    </p>
+
+    <p>
+      <strong>Delivery Charges:</strong> 
+      <span>₹{{ getDeliveryCharges() }}</span>
+      <br>
+      <small class="note" *ngIf="getOriginalTotal() > 0 && getOriginalTotal() < 2000">
+        Add ₹{{ 2000 - getOriginalTotal() }} more for Free Delivery!
+      </small>
+      <small class="free-delivery-text" *ngIf="getOriginalTotal() >= 2000">
+        [Free delivery applied]
+      </small>
+    </p>
+
+    <p class="savings" *ngIf="getTotalSavings() > 0">
+        <strong>Your Total Savings:</strong> 
+        <span>- ₹{{ getTotalSavings() }}</span>
+    </p>
+
+    <p class="grand-total">
+        <strong>Grand Total:</strong> 
+        <span>₹{{ getGrandTotal() }}</span>
+    </p>
+  </div>
+
+  <button 
+    class="proceed-btn" 
+    *ngIf="getGrandTotal() > 0" 
+    (click)="proceedOrder()">
+    Proceed with Order
+  </button>
+</div>

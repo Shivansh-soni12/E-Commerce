@@ -1,0 +1,146 @@
+/* ============================================================
+   ORDER SUMMARY — Refined & Balanced
+   ============================================================ */
+
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  /* Removed large padding to let the parent grid handle spacing */
+}
+
+/* Header - Moved inside or aligned to container */
+h3 {
+  text-align: left; /* Changed to left for a more modern sidebar look */
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: white;
+  margin: 0 0 15px 5px;
+  opacity: 0.9;
+}
+
+/* Container */
+.summary-container {
+  width: 100%;
+  padding: 24px;
+  background: #121212;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Increased gap for clarity */
+  animation: dropIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+/* Table - Optimized for Sidebar */
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+/* header cells get a bit of horizontal padding too so columns don't run together */
+.summary-table th {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 10px 8px 10px 0; /* top right bottom left */
+  border-bottom: 1px solid #222;
+}
+
+/* add horizontal padding so price/quantity cells have breathing room */
+.summary-table td {
+  padding: 10px 8px; /* vertical and horizontal spacing */
+  font-size: 12px; /* Slightly smaller for sidebar fit */
+  color: #bbb;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+/* Right-align numeric columns for better readability */
+.summary-table th:nth-child(2),
+.summary-table td:nth-child(2),
+.summary-table th:nth-child(4),
+.summary-table td:nth-child(4) {
+  text-align: right;
+}
+
+
+/* Pricing Details */
+.summary-container p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.note {
+  font-size: 10px;
+  color: #666;
+  display: block; /* Moves to new line if space is tight */
+  text-align: right;
+}
+
+.savings {
+  color: #a3ff33 !important;
+  font-size: 12px;
+  background: rgba(163, 255, 51, 0.08);
+  padding: 10px;
+  border-radius: 8px;
+  justify-content: center !important; /* Center the savings text */
+  margin-top: 5px !important;
+}
+
+.grand-total {
+  margin-top: 10px !important;
+  padding-top: 20px;
+  border-top: 1px dashed #333; /* Dashed line for "receipt" feel */
+  color: #fff !important;
+  font-size: 15px !important;
+}
+
+.grand-total strong:last-child {
+  color: var(--accent);
+  font-size: 24px;
+}
+
+/* Action Button */
+.proceed-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-top: 10px;
+  width: 100%;
+}
+
+.proceed-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  filter: brightness(1.1);
+}
+
+/* Animation */
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Handling */
+@media (max-width: 920px) {
+  .summary-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
