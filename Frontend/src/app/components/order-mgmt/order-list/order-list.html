@@ -1,0 +1,53 @@
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2>Order History</h2>
+
+</div>
+
+<div class="list-container">
+  
+  <form [formGroup]="searchForm" class="filter-bar">
+    <input type="text" formControlName="searchText" placeholder="Search by Product Name or ID...">
+    <select formControlName="status">
+      <option value="All">All Statuses</option>
+      <option value="pending">Pending</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </form>
+
+  <div class="orders-grid" *ngIf="orders.length > 0">
+    <div class="order-card" 
+         *ngFor="let order of orders"
+         [routerLink]="['/orders/detail', order.id]" 
+         style="cursor: pointer;">
+         
+      <div class="card-header">
+        <span>#{{ order.id }}</span>
+        <span class="badge" [ngClass]="(order.status || 'pending').toLowerCase()">
+          {{ order.status }}
+        </span>
+      </div>
+      
+      <div class="card-body">
+         <div class="item-row" *ngFor="let item of order.productDetails">
+            <img [src]="item.imageUrl || 'assets/img/placeholder.png'" alt="product" class="thumb">
+            <div class="item-text">
+              <p class="p-name">{{ item.name }}</p>
+              <p class="p-qty">Qty: {{ item.quantity }}</p>
+            </div>
+         </div>
+      </div>
+      
+      <div class="card-footer">
+        <span class="date">{{ order.date | date: "mediumDate" }}</span>
+        <strong class="total">{{ order.totalAmount | currency:'INR' }}</strong>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="orders.length === 0" class="no-data">
+    <p>No orders found. (Checking database...)</p>
+  </div>
+</div>
