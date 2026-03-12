@@ -11,7 +11,6 @@ const getOrderStats = async (req, res) => {
   }
 };
 
-// Get specific order by ID (Added for OrderDetail component)
 const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -23,8 +22,6 @@ const getOrderById = async (req, res) => {
   }
 };
 
-// Update order status specifically (Added for Cancel/Return actions)
-// controller/orderController.js
 const updateOrderStatus = async (req, res) => {
   try {
     const { status, reason } = req.body;
@@ -39,10 +36,23 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-// Create new order
 const createOrder = async (req, res) => {
   try {
-    const order = new Order(req.body);
+    const orderData = {
+      userId: req.body.userId,
+      items: req.body.items.map(item => ({
+        productId: item.productId,
+        name: item.name,      
+        price: item.price,    
+        image: item.image,   
+        quantity: item.quantity
+      })),
+      totalAmount: req.body.totalAmount,
+      shippingAddress: req.body.shippingAddress,
+      status: "pending"
+    };
+
+    const order = new Order(orderData);
     await order.save();
     res.status(201).json(order);
   } catch (error) {
@@ -50,7 +60,6 @@ const createOrder = async (req, res) => {
   }
 };
 
-// Get all orders (admin use)
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
@@ -62,7 +71,6 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-// Get all orders by userId
 const getOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -74,7 +82,6 @@ const getOrdersByUser = async (req, res) => {
   }
 };
 
-// Get specific order by userId and orderId
 const getOrderByUserAndId = async (req, res) => {
   try {
     const { userId, orderId } = req.params;
@@ -87,7 +94,6 @@ const getOrderByUserAndId = async (req, res) => {
   }
 };
 
-// Update order status (partial update)
 const updateOrder = async (req, res) => {
   try {
     const { id } = req.params;
