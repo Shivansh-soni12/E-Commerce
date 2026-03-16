@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-form',
-  standalone: true, // Ensure this is present if using imports
+  standalone: true, 
   imports: [CommonModule, FormsModule],
   templateUrl: './register-form.html',
   styleUrls: ['./register-form.css']
@@ -28,7 +28,7 @@ export class RegisterForm {
 
   processRegister(form: any) {
     if (form.valid) {
-      // NOTE: Remove 'id: Date.now()' - MongoDB creates the ID automatically
+      
       const newUser: any = {
         name: this.name,
         email: this.email,
@@ -38,16 +38,15 @@ export class RegisterForm {
         role: 'user'
       };
 
-      // SEAMLESS INTEGRATION FIX: Use .subscribe()
-      // SEAMLESS INTEGRATION FIX: Use .subscribe()
+      
       this.userService.register(newUser).subscribe({
         next: (response: any) => {
-          // This block runs ONLY if the backend returns a 200/201 Success
+          
           alert('User Registered Successfully in Database!');
           this.router.navigate(['/login']);
         },
         error: (err: { error: { message: string; }; }) => {
-          // This block runs if the email exists (400) or server is down (500)
+         
           console.error('Registration Error:', err);
           const errorMsg = err.error?.message || 'Registration failed. Try again.';
           alert(errorMsg);

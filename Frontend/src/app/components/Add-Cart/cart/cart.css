@@ -1,6 +1,4 @@
-/* ============================================================
-   CART — List-Style Layout for Grid Integration
-   ============================================================ */
+
 
 :host {
   display: block;
@@ -18,21 +16,13 @@ h3 {
   opacity: 0.9;
 }
 
-/* -----------------------------------
-   CONTAINER
-   Changed from auto-fill grid to a single column list
------------------------------------ */
 .cart-container {
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Consistent spacing between items */
+  gap: 16px; 
   width: 100%;
 }
 
-/* -----------------------------------
-   CARDS
-   Redesigned to be horizontal for better space usage
------------------------------------ */
 .cart-card {
   background: #121212;
   border-radius: 16px;
@@ -40,7 +30,7 @@ h3 {
   border: 1px solid #2a2a2a;
   transition: all 0.3s ease;
   display: flex;
-  flex-direction: column; /* Stacked on mobile, row on desktop */
+  flex-direction: column; 
   gap: 15px;
   animation: slideIn 0.4s ease-out;
 }
@@ -51,9 +41,6 @@ h3 {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* -----------------------------------
-   TEXT & INFO
------------------------------------ */
 .cart-card h4 {
   font-size: 18px;
   margin: 0;
@@ -71,12 +58,9 @@ h3 {
 }
 
 .cart-card p strong {
-  color: var(--accent, #55efc4); /* Uses your theme accent */
+  color: var(--accent, #55efc4); 
 }
 
-/* -----------------------------------
-   DYNAMIC BUTTONS (The Actions Row)
------------------------------------ */
 .cart-actions {
   margin-top: 10px;
   display: flex;
@@ -99,22 +83,21 @@ h3 {
   justify-content: center;
 }
 
-/* Quantity Controls Group */
 .remove-btn, .add-btn {
   background: #222;
   color: white;
   font-size: 18px !important;
   width: 40px;
   height: 40px;
-  flex: none; /* Don't grow */
+  flex: none; 
 }
 
 .remove-btn:hover { background: #333; color: #ff7675; }
 .add-btn:hover { background: #333; color: #55efc4; }
 
-/* Action Buttons (Wishlist/Delete) */
+
 .wishlist-btn, .delete-btn {
-  flex: 1; /* These grow to fill space */
+  flex: 1; 
   height: 40px;
   min-width: 120px;
 }
@@ -134,11 +117,8 @@ h3 {
 .wishlist-btn:hover { background: #a29bfe; color: #000; }
 .delete-btn:hover { background: #ff7675; color: #000; }
 
-/* -----------------------------------
-   RESPONSIVE OPTIMIZATION
------------------------------------ */
 @media (min-width: 600px) {
-  /* On larger screens, put info on left and actions on right */
+  
   .cart-card {
     flex-direction: row;
     justify-content: space-between;

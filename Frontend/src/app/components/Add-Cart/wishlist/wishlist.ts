@@ -19,24 +19,19 @@ export class Wishlist implements OnInit, OnDestroy {
   constructor(
     public userService: UserService,
     public cartService: CartService,
-    private cdr: ChangeDetectorRef // Inject this
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit() {
     this.userSub = this.userService.currentUser$.subscribe(user => {
-      // Create a fresh reference of the array to trigger Angular's check
       this.items = user?.wishlist ? [...user.wishlist] : [];
       console.log("Wishlist Component received data:", this.items);
-      
-      // Manually trigger UI refresh
       this.cdr.detectChanges(); 
     });
   }
 
   onRemove(item: any) {
   console.log("Remove button clicked for item:", item);
-  
-  // Extract the ID safely
   const pId = item.productId || item._id || item.id;
   
   if (!pId) {

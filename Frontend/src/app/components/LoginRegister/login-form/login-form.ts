@@ -20,18 +20,17 @@ export class LoginForm {
 
   constructor(private userService: UserService) {}
 
-processLogin(form: any) {
-  if (form.valid) {
-    this.userService.login({ email: this.email, password: this.password }).subscribe({
-      next: (res: any) => {
-      
-        console.log('Login successful, emitting to parent...');
-        this.loginSuccess.emit(res); 
-      },
-      error: (err) => {
-        alert(err.error?.message || 'Login Failed');
-      }
-    });
+  processLogin(form: any) {
+    if (form.valid) {
+      this.userService.login({ email: this.email, password: this.password }).subscribe({
+        next: (res: any) => {
+          console.log('Login successful, emitting to parent...');
+          this.loginSuccess.emit(res); 
+        },
+        error: (err) => {
+          alert(err.error?.message || 'Login Failed');
+        }
+      });
+    }
   }
-}
 }

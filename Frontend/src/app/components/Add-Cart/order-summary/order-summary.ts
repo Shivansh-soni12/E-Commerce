@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OrderMgmt } from '../../../services/order-mgmt'; // Verify this path
+import { OrderMgmt } from '../../../services/order-mgmt'; 
 import { Router } from '@angular/router';
-import { UserService } from '../../../services/user-service'; // To get the loggedInUser
+import { UserService } from '../../../services/user-service'; 
 import { Subscription } from 'rxjs';
-import { CartService } from '../../../services/cart.service'; // To clear the cart after order
+import { CartService } from '../../../services/cart.service'; 
 
 @Component({
   selector: 'app-order-summary',
@@ -13,7 +13,7 @@ import { CartService } from '../../../services/cart.service'; // To clear the ca
   templateUrl: './order-summary.html',
   styleUrls: ['./order-summary.css']
 })
-export class OrderSummary {
+export class OrderSummary implements OnInit, OnDestroy {
   @Input() cart: any[] = []; 
 
   loggedInUser: any = null;
@@ -26,13 +26,11 @@ export class OrderSummary {
     private cartService: CartService
   ) {}
 
-ngOnInit() {
-    // Correct way to get the user from your UserService
+  ngOnInit() {
     this.userSub = this.userService.currentUser$.subscribe(user => {
       this.loggedInUser = user;
     });
   }
-
 
   get cartItems() {
     return this.cart || [];
@@ -58,45 +56,22 @@ ngOnInit() {
   getGrandTotal(): number {
     return this.getOriginalTotal() + this.getDeliveryCharges() - this.getTotalSavings();
   }
-
-  // --- THE FIX IS HERE ---
-proceedOrder() {
-    console.log("Attempting checkout with items:", this.cartItems);
-
+ proceedOrder() {
+    console.log("Proceeding to payment with items:", this.cartItems);
+ 
     const userId = this.loggedInUser?._id || this.loggedInUser?.id;
-
+ 
     if (!userId) {
       alert("Please log in to place an order.");
       this.router.navigate(['/login']);
       return;
     }
 
-    console.log("Triggering Network Request for User:", userId);
+    const finalAmount = this.getGrandTotal();
 
-    // This is the line that will make the POST show up in the Network tab
- // order-summary.ts -> proceedOrder() function
-
-this.orderMgmt.placeOrder(String(userId)).subscribe({
-  next: (res) => {
-    console.log("ORDER SUCCESSFUL:", res);
-    
-    // 1. Clear the local CartService state immediately
-    this.cartService.setCart([]); 
-
-    // 2. If your UserService keeps a copy of the user, update it too
-    if (this.loggedInUser) {
-      this.loggedInUser.cart = [];
-      // This tells other components (like the Navbar badge) that the cart is now empty
-      this.userService['updateLocalUser'](this.loggedInUser); 
-    }
-
-    alert("Order Placed Successfully!");
-    this.router.navigate(['/orders/dashboard']);
-  },
-  error: (err) => {
-    console.error("ORDER FAILED:", err);
-  }
-});
+    this.router.navigate(['/payment'], { 
+      state: { amount: finalAmount, cart: this.cartItems } 
+    });
   }
 
   ngOnDestroy() {

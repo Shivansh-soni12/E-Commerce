@@ -1,15 +1,11 @@
-/* ============================================================
-   MAIN CART PAGE — Refined & Optimized
-   ============================================================ */
 
 :host {
   display: block;
   width: 100%;
-  padding: 20px 0 60px; /* Increased top/bottom padding for breathing room */
+  padding: 20px 0 60px; 
   box-sizing: border-box;
 }
 
-/* Page Title & User Info */
 h1, div > h2 {
   text-align: center;
   margin-left: auto;
@@ -34,21 +30,16 @@ div > h2 {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* The Grid Layout 
-   Added 'align-items: start' to prevent the summary from stretching 
-   if the cart is long.
-*/
 .cart-summary-layout {
   display: grid;
-  grid-template-columns: 1fr 350px; /* Fixed width for summary feels more stable */
-  gap: 30px;                       /* Increased gap for a cleaner look */
-  width: min(1200px, 95vw);        /* Slightly wider maximum */
+  grid-template-columns: 1fr 350px; 
+  gap: 30px;                     
+  width: min(1200px, 95vw);        
   margin: 0 auto;
-  align-items: start;              /* Crucial: keeps components at the top */
+  align-items: start;              
   animation: slideUp 0.4s ease-out;
 }
 
-/* Ensure Angular components behave like block containers */
 app-cart,
 app-order-summary,
 app-wishlist,
@@ -57,15 +48,11 @@ app-empty-cart {
   width: 100%;
 }
 
-/* UX Enhancement: Make the Order Summary sticky 
-   so it stays visible while scrolling the cart.
-*/
 app-order-summary {
   position: sticky;
   top: 20px; 
 }
 
-/* Wishlist Section - Positioned below the main grid */
 app-wishlist {
   width: min(1200px, 95vw);
   margin: 50px auto 0;
@@ -74,13 +61,12 @@ app-wishlist {
   animation: fadeIn 0.6s ease-out;
 }
 
-/* Empty Cart State */
 app-empty-cart {
   margin: 40px auto;
   max-width: 450px;
 }
 
-/* Animations */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -91,16 +77,16 @@ app-empty-cart {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Breakpoints */
+
 @media (max-width: 980px) {
   .cart-summary-layout {
-    grid-template-columns: 1fr; /* Stacked layout */
+    grid-template-columns: 1fr; 
     width: min(700px, 92vw);
   }
   
   app-order-summary {
-    position: static; /* Remove sticky on mobile */
-    order: 2;         /* Cart (1) then Summary (2) */
+    position: static;
+    order: 2;     
   }
   
   app-cart {

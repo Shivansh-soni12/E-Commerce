@@ -70,7 +70,7 @@ export class Cart implements OnInit, OnDestroy {
         this.cartService.setCart(res.user.cart);
         console.log('Item deleted successfully');
       },
-      error: (err) => {
+      error: (err: any) => { 
         console.error('Delete failed:', err);
       }
     });
@@ -80,40 +80,28 @@ export class Cart implements OnInit, OnDestroy {
     this.userService.moveToWishlist(item);
   }
 
-  // --- FIXED PLACE ORDER LOGIC ---
   onPlaceOrder() {
-  console.log("1. Button Clicked. Current items:", this.cartItems);
-  
-  // LOG THE USER OBJECT TO SEE IF IT EXISTS
-  console.log("2. LoggedInUser status:", this.loggedInUser);
-
-  if (!this.loggedInUser) {
-    console.error("3. FAILURE: loggedInUser is NULL. Code stopping.");
-    alert("You are not logged in correctly.");
-    return;
-  }
-
-  const userId = this.loggedInUser._id;
-  console.log("4. User ID is:", userId);
-
-  if (!userId) {
-    console.error("5. FAILURE: _id property is missing from user object.");
-    return;
-  }
-
-  console.log("6. About to call Service...");
-
-  this.orderMgmt.placeOrder(String(userId)).subscribe({
-    next: (res) => {
-      console.log("7. SUCCESS!", res);
-      this.cartService.setCart([]);
-      this.router.navigate(['/orders/dashboard']);
-    },
-    error: (err) => {
-      console.error("7. NETWORK ERROR:", err);
+    console.log("1. Button Clicked. Current items:", this.cartItems);
+    if (!this.loggedInUser) {
+      alert("You are not logged in correctly.");
+      return;
     }
-  });
-}
+
+    const userId = this.loggedInUser._id;
+    if (!userId) return;
+
+    this.orderMgmt.placeOrder(String(userId)).subscribe({
+      next: (res: any) => {
+        console.log("Order Success!", res);
+        this.cartService.setCart([]);
+        this.router.navigate(['/orders/dashboard']);
+      },
+      error: (err: any) => { 
+        console.error("Order Failure:", err);
+        alert("Failed to place order. Check console.");
+      }
+    });
+  }
 
   getIndividualTotal(item: any): number {
     return item.price * (item.quantity || 0);
@@ -130,9 +118,8 @@ export class Cart implements OnInit, OnDestroy {
         next: (res: any) => {
           this.userService['updateLocalUser'](res.user);
           this.cartService.setCart(res.user.cart);
-          console.log('Cart synced to DB');
         },
-        error: (err) => console.error('Cart sync failed', err)
+        error: (err: any) => console.error('Cart sync failed', err) 
       });
     }
   }

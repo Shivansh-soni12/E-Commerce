@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-// Ensure these paths match your actual folder structure
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../models/product';
 
@@ -16,7 +14,16 @@ import { Product } from '../../../models/product';
 })
 export class Editformcomponent implements OnInit {
   product!: Product;
+  originalProduct!: string; 
   selectedFile: File | null = null;
+  isSubmitting: boolean = false;
+
+  categoryBrands: { [key: string]: string[] } = {
+    'Electronics': ['Samsung', 'Sony', 'LG', 'Apple'],
+    'Computers': ['Dell', 'HP', 'Lenovo', 'ASUS'],
+    'Wearables': ['Boat', 'Noise', 'Apple', 'Fitbit'],
+    'Accessories': ['Logitech', 'Razer', 'Corsair', 'TP-Link']
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -30,8 +37,9 @@ export class Editformcomponent implements OnInit {
       this.productService.getProductById(id).subscribe({
         next: (found: Product) => {
           this.product = { ...found };
+          this.originalProduct = JSON.stringify(found);
         },
-        error: (err: any) => console.error('Could not load product', err)
+        error: (err) => console.error('Load error', err)
       });
     }
   }
@@ -43,15 +51,22 @@ export class Editformcomponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    // Use the MongoDB _id (usually preferred) or the id property
-    const productId = this.product._id || String(this.product.id);
+  canSave(): boolean {
+    const hasFile = this.selectedFile !== null;
+    const hasTextChanged = JSON.stringify(this.product) !== this.originalProduct;
+    return hasFile || hasTextChanged;
+  }
 
+  onSubmit() {
+    this.isSubmitting = true;
+    const productId = this.product._id || String(this.product.id);
     const formData = new FormData();
+    
     formData.append('name', this.product.name);
     formData.append('description', this.product.description);
     formData.append('price', this.product.price.toString());
     formData.append('category', this.product.category || '');
+    formData.append('brand', this.product.brand || '');
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile, this.selectedFile.name);
@@ -59,12 +74,14 @@ export class Editformcomponent implements OnInit {
 
     this.productService.updateProduct(productId, formData).subscribe({
       next: () => {
+        this.isSubmitting = false;
         alert('Product updated successfully!');
         this.router.navigate(['/admin/manage']);
       },
-      error: (err: any) => {
-        console.error('Update failed:', err);
-        alert('Failed to update product.');
+      error: (err) => {
+        this.isSubmitting = false;
+        console.error('Update failed', err);
+        alert('Error updating product.');
       }
     });
   }

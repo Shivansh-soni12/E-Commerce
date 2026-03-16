@@ -1,5 +1,3 @@
-
-/* Title */
 h2 {
   font-size: 32px;
   font-weight: 800;
@@ -19,12 +17,10 @@ h2 {
   padding: 24px 0;
 }
 
-/* Ensure padding/border don’t cause overflow anywhere inside */
 .layout, .layout * {
   box-sizing: border-box;
 }
 
-/* LEFT PANEL (Login/Register) — centered */
 .left {
   grid-column: 2;
   background: var(--surface);
@@ -40,27 +36,23 @@ h2 {
   background: var(--surface-2);
   color: var(--text);
   font-weight: 700;
-  border: 1px solid #1f2440;   /* neutral border */
+  border: 1px solid #1f2440;  
   border-radius: 10px;
   cursor: pointer;
   margin-bottom: 20px;
   transition:
     background 160ms ease,
     border-color 160ms ease,
-    transform 160ms ease;       /* removed box-shadow changes */
+    transform 160ms ease;     
 }
 
-/* Minimal hover (no glow, no accent border) */
 .left > button:hover {
   transform: translateY(-2px);
-  /* keep background/border neutral, no glow */
 }
 
 .left > button.active {
   background: color-mix(in oklab, var(--accent) 8%, var(--surface-2));
-  /* keep border neutral */
   border-color: #1f2440;
-  /* no glow */
 }
 
 .right {
@@ -108,9 +100,6 @@ app-profile-dashboard {
   box-shadow: inset 0 0 16px rgba(0,0,0,0.35);
 }
 
-/* ----------------------------------------------------------
-   PREVENT INPUT OVERFLOW (no template changes required)
-   ---------------------------------------------------------- */
 .left input,
 .left select,
 .left textarea,
@@ -129,13 +118,11 @@ app-profile-dashboard {
   box-sizing: border-box;
 }
 
-/* Optional: ensure form wrappers also respect container width */
 .left app-login-form,
 .left app-register-form {
   width: 100%;
 }
 
-/* Soft fade/slide animation for ngIf swaps */
 .left > div,
 .right > app-admin-main,
 .right > app-profile-dashboard {
@@ -162,7 +149,6 @@ app-profile-dashboard {
   }
 }
 
-/* Motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .left > div,
   .right > app-admin-main,

@@ -127,3 +127,60 @@ app-product-card {
   .product-list { grid-template-columns: 1fr; gap: 20px; }
   .hero-title { font-size: clamp(26px, 8vw, 36px); }
 }
+
+.no-data-container {
+  grid-column: 1 / -1; 
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+  border-radius: 20px;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 600px;
+  animation: productFadeIn 0.6s ease-out;
+}
+
+.no-data-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  display: block;
+  filter: drop-shadow(0 0 15px color-mix(in oklab, var(--accent) 40%, transparent));
+}
+
+.no-data-container h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+.no-data-container p {
+  color: color-mix(in oklab, var(--text) 60%, transparent);
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+.clear-btn {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+.clear-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px color-mix(in oklab, var(--accent) 50%, transparent);
+}
+
+.clear-btn:active {
+  transform: translateY(0);
+}

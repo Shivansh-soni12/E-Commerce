@@ -5,7 +5,6 @@
   <p>Browse our collection of new Arrivals</p>
 </div>
 
-
 <div class="controls">
   <input
     type="text"
@@ -19,16 +18,22 @@
     <option value="Computers">Computers</option>
     <option value="Wearables">Wearables</option>
     <option value="Accessories">Accessories</option>
-
   </select>
 </div>
 
-<div class="product-list">
+<div class="product-list" *ngIf="filteredProducts.length > 0">
   <app-product-card
-    *ngFor="let product of (products$ | async)"
+    *ngFor="let product of filteredProducts"
     [product]="product"
     [loggedInUser]="loggedInUser"
     (addToCart)="onAddToCart(product)"
     (addtoWishlist)="onAddToWishList(product)">
   </app-product-card>
+</div>
+
+<div *ngIf="filteredProducts.length === 0" class="no-data-container">
+  <div class="no-data-icon"></div>
+  <h3>No products found</h3>
+  <p>We couldn't find any products matching "<strong>{{searchTerm}}</strong>"</p>
+  <button (click)="searchTerm = ''" class="clear-btn">View All Products</button>
 </div>

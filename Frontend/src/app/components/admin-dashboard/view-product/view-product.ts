@@ -23,8 +23,6 @@ this.productService.getProducts().subscribe({
   next: (data) => this.products = data,
   error: (err) => console.error(err)
 });}
- 
- 
   get filteredProducts(): Product[] {
     return this.products.filter(p => {
       const matchesSearch =

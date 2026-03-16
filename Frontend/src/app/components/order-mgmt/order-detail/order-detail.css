@@ -48,10 +48,17 @@ h1 { margin: 0; font-size: 2rem; }
   text-transform: uppercase;
   border: 1px solid transparent;
 }
-.badge.pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.4); }
 .badge.shipped { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.4); }
-.badge.delivered { background: rgba(16, 185, 129, 0.2); color: #4ade80; border-color: rgba(16, 185, 129, 0.4); }
-.badge.cancelled { background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); }
+/* order-detail.css */
+.badge.delivered {
+  background-color: #2ecc71; /* Green */
+  color: white;
+}
+
+.badge.pending {
+  background-color: #f1c40f; /* Yellow */
+  color: black;
+}.badge.cancelled { background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239, 68, 68, 0.4); }
 .badge.fulfilled { background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.4); }
 .card, .timeline-card {
   background: #121212;
@@ -60,6 +67,7 @@ h1 { margin: 0; font-size: 2rem; }
   padding: 25px;
   margin-bottom: 25px;
 }
+
 
 .timeline {
   display: flex;

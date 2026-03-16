@@ -19,78 +19,75 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class HeroPage implements OnInit, OnDestroy {
   bannerMessage: string = 'Shop The Latest Products!';
-  products: Product[] = [];
+  products: Product[] = []; 
   loggedInUser: User | null = null;
   searchTerm: string = '';
   sortCategory: string = '';
-  products$!: Observable<Product[]>;
   
   private userSub!: Subscription;
+  private productSub!: Subscription; 
 
   constructor(
-  private productService: ProductService, 
-  private userService: UserService,       
-  public cartService: CartService, 
-  private router: Router
-) {}
-  ngOnInit() {
-    this.products$ = this.productService.getProducts();
-    this.products$.subscribe(data => this.products = data);
+    private productService: ProductService, 
+    private userService: UserService,       
+    public cartService: CartService, 
+    private router: Router
+  ) {}
 
+  ngOnInit() {
+    this.productSub = this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+      },
+      error: (err) => console.error("Could not load products", err)
+    });
     this.userSub = this.userService.currentUser$.subscribe(user => {
       this.loggedInUser = user;
     });
   }
 
-
-onAddToCart(product: Product) {
-  console.log('Attempting to add to cart:', product.name);
-
-  if (!this.loggedInUser) {
-    alert('Please login first to add items to cart!');
-    this.router.navigate(['/login']);
-    return;
-  }
-
-  try {
+  onAddToCart(product: Product) {
+    if (!this.loggedInUser) {
+      alert('Please login first!');
+      this.router.navigate(['/login']);
+      return;
+    }
     this.userService.addToCart(product);
-
     alert("Added to Cart: " + product.name);
-  } catch (error) {
-    console.error("Critical error in onAddToCart:", error);
   }
-}
 
   onAddToWishList(product: Product) {
     if (!this.loggedInUser) {
       alert('Please login first!');
       return;
     }
-    
     this.userService.addToWishlist(product);
     alert('Added to wishlist');
   }
 
   get filteredProducts(): Product[] {
-    let result = this.products;
+    let result = [...this.products]; 
+
     if (this.searchTerm) {
-      result = result.filter(
-        (p) =>
-          p.name?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          p.category?.toLowerCase().includes(this.searchTerm.toLowerCase()),
+      const search = this.searchTerm.toLowerCase();
+      result = result.filter(p => 
+        p.name?.toLowerCase().includes(search) || 
+        p.description?.toLowerCase().includes(search) || 
+        p.category?.toLowerCase().includes(search)
       );
     }
+
     if (this.sortCategory) {
-      result = result.filter(
-        (p) => p.category?.toLowerCase() === this.sortCategory.toLowerCase(),
+      result = result.filter(p => 
+        p.category?.toLowerCase() === this.sortCategory.toLowerCase()
       );
     }
+
     return result;
   }
 
   ngOnDestroy() {
-    if (this.userSub) {
-      this.userSub.unsubscribe();
-    }
+    if (this.userSub) this.userSub.unsubscribe();
+    if (this.productSub) this.productSub.unsubscribe();
   }
 }

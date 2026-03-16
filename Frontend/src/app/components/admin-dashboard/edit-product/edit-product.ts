@@ -45,13 +45,13 @@ export class Editproduct implements OnInit {
  
   goToDelete(id: any) {
   if (confirm('Are you sure you want to delete this product?')) {
-    // MongoDB uses string IDs, ensure we pass the correct one
+
     const productId = String(id);
 
     this.productService.deleteProduct(productId).subscribe({
       next: () => {
         alert('Product deleted!');
-        // Update local UI without a page reload
+        
         this.products = this.products.filter(p => String(p.id) !== productId);
       },
       error: (err) => console.error('Delete failed:', err)

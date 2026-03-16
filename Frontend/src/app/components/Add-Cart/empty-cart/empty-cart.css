@@ -1,17 +1,10 @@
 
-/* ============================================================
-   EMPTY CART — Neon Dark Theme
-   Matches your entire UI
-   No HTML changes required
-   ============================================================ */
-
 :host {
   display: block;
   width: 100%;
   max-width: 100%;
 }
 
-/* Wrapper */
 .empty-cart {
   text-align: center;
   padding: 40px 20px;
@@ -27,7 +20,6 @@
   animation: fadeUp 0.5s ease-out;
 }
 
-/* Title */
 .empty-cart h3 {
   font-size: 22px;
   font-weight: 800;
@@ -37,14 +29,12 @@
   text-shadow: 0 0 16px color-mix(in oklab, var(--accent) 30%, transparent);
 }
 
-/* Description */
 .empty-cart p {
   font-size: 15px;
   color: var(--muted);
   margin: 0 0 20px;
 }
 
-/* Button */
 .shop-btn {
   padding: 12px 20px;
   font-weight: 700;
@@ -69,13 +59,11 @@
   box-shadow: 0 0 16px color-mix(in oklab, var(--accent) 40%, transparent);
 }
 
-/* Animation */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Mobile tuning */
 @media (max-width: 480px) {
   .empty-cart { padding: 30px 16px; }
   .shop-btn { padding: 10px 16px; }

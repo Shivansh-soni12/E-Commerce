@@ -12,68 +12,101 @@ import { UserService } from '../../../services/user-service';
   styleUrls: ['./profile-dashboard.css']
 })
 export class ProfileDashboard implements OnInit {
-  profileData : User|null=null;
+  profileData: User | null = null;
   profileForm!: FormGroup;
   isEditing: boolean = false;
+  private snapshot: any = {}; 
 
   constructor(private fb: FormBuilder, private userService: UserService) {}
 
-ngOnInit() {
-  console.log("Profile Component Loaded");
-  const user = this.userService.loggedInUser;
-  console.log("User from service:", user); // If this is null, the form won't init
-  
-  if (user) {
-    this.profileData = user;
-    this.initForm();
+  ngOnInit() {
+    const user = this.userService.loggedInUser;
+    if (user) {
+      this.profileData = user;
+      this.initForm();
+    }
   }
-}
 
   initForm() {
     if (!this.profileData) return;
+  
+    this.snapshot = {
+      name: this.profileData.name || '',
+      email: this.profileData.email || '',
+      password: this.profileData.password || '',
+      shippingAddress: this.profileData.shippingAddress || '',
+      paymentDetails: this.profileData.paymentDetails || ''
+    };
+
     this.profileForm = this.fb.group({
-      name: [this.profileData.name, [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-      email: [this.profileData.email, [Validators.required, Validators.email]],
-      password: [this.profileData.password, [
-        Validators.required,
+      name: [this.snapshot.name, [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+      email: [this.snapshot.email, [Validators.required, Validators.email]],
+      password: [this.snapshot.password, [
         Validators.minLength(6),
         Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
       ]],
-      shippingAddress: [this.profileData.shippingAddress, [Validators.required, Validators.minLength(10)]],
-      paymentDetails: [this.profileData.paymentDetails, [Validators.required]]
+      shippingAddress: [this.snapshot.shippingAddress, [Validators.required, Validators.minLength(10)]],
+      paymentDetails: [this.snapshot.paymentDetails, [Validators.required]]
     });
-  }
 
-enableEdit() {
-  console.log("Edit button clicked!");
-  this.isEditing = true;
-}
-
-  // profile-dashboard.ts
-
-saveChanges() {
-  if (this.profileForm.valid) {
-    const updatedUser = { ...this.profileData, ...this.profileForm.value };
-    
-    this.userService.updateProfile(updatedUser).subscribe({
-      next: (res) => {
-        alert('Profile updated successfully!');
-        // res.user contains the fresh data from the DB
-        this.profileData = res.user; 
-        this.isEditing = false;
-        // No need to call updateLocalUser here anymore because 
-        // we added .pipe(tap(...)) in the service!
-      },
-      error: (err) => {
-        console.error('Update failed:', err);
-        alert('Could not update profile.');
+    this.profileForm.valueChanges.subscribe(currentValues => {
+      const isStillOriginal = this.checkIfUnchanged(currentValues);
+      
+      if (isStillOriginal) {
+        this.profileForm.markAsPristine();
+      } else {
+        this.profileForm.markAsDirty();
       }
     });
   }
-}
+
+  private checkIfUnchanged(currentValues: any): boolean {
+    return Object.keys(this.snapshot).every(key => {
+      return String(currentValues[key] ?? '') === String(this.snapshot[key] ?? '');
+    });
+  }
+
+  enableEdit() {
+    this.isEditing = true;
+    if (this.profileData) {
+      this.snapshot = {
+        name: this.profileData.name || '',
+        email: this.profileData.email || '',
+        password: this.profileData.password || '',
+        shippingAddress: this.profileData.shippingAddress || '',
+        paymentDetails: this.profileData.paymentDetails || ''
+      };
+      this.profileForm.patchValue(this.snapshot);
+      this.profileForm.markAsPristine();
+    }
+  }
+
+  saveChanges() {
+    if (this.profileForm.pristine || this.checkIfUnchanged(this.profileForm.value)) {
+      this.isEditing = false;
+      return;
+    }
+
+    if (this.profileForm.valid) {
+      const updatedUser = { ...this.profileData, ...this.profileForm.value };
+      
+      this.userService.updateProfile(updatedUser).subscribe({
+        next: (res) => {
+          this.profileData = res.user;
+          this.isEditing = false;
+          this.initForm(); 
+          alert('Profile updated successfully!');
+        },
+        error: (err) => {
+          console.error('Update failed:', err);
+          alert('Could not update profile.');
+        }
+      });
+    }
+  }
 
   cancel() {
     this.isEditing = false;
-    this.initForm();
+    this.initForm(); 
   }
 }

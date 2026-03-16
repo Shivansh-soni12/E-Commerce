@@ -1,0 +1,62 @@
+<div class="payment-wrapper">
+  <div class="payment-container">
+    
+    <div class="payment-header">
+      <h3>Complete Payment</h3>
+      <p class="amount-badge">Total: ₹{{ paymentAmount }}</p>
+    </div>
+
+    <form [formGroup]="paymentForm" (ngSubmit)="processMockPayment()">
+      
+      <div class="form-group">
+        <label>Name on Card</label>
+        <input type="text" formControlName="nameOnCard" placeholder="Example : John Doe" (keypress)="($event.charCode >= 65 && $event.charCode <= 90) || ($event.charCode >= 97 && $event.charCode <= 122) || $event.charCode === 32">
+        <small class="error" *ngIf="paymentForm.get('nameOnCard')?.touched && paymentForm.get('nameOnCard')?.errors?.['pattern']">
+  Name can only contain letters and spaces.
+</small>
+<small class="error" *ngIf="paymentForm.get('nameOnCard')?.touched && paymentForm.get('nameOnCard')?.errors?.['required']">
+  Name is required.
+</small>
+      </div>
+
+      <div class="form-group">
+        <label>Card Number</label>
+        <div class="input-with-icon">
+          <input type="text" formControlName="cardNumber" placeholder="Enter 16 digits number" maxlength="19" (input)="formatCardNumber($event)" (keydown)="restrictToNumbers($event)" autocomplete="cc-number">
+         
+        </div>
+        <small class="error" *ngIf="paymentForm.get('cardNumber')?.touched && paymentForm.get('cardNumber')?.invalid">
+          Must be exactly 16 digits.
+        </small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label>Expiry Date</label>
+          <input type="text" formControlName="expiry" placeholder="MM/YY" maxlength="5" (input)="formatExpiry($event)" (keydown)="restrictToNumbers($event)">
+          <small class="error" *ngIf="paymentForm.get('expiry')?.touched && paymentForm.get('expiry')?.hasError('pastDate')">
+  Card has expired.
+</small>
+<small class="error" *ngIf="paymentForm.get('expiry')?.touched && paymentForm.get('expiry')?.hasError('pattern')">
+  Invalid format (MM/YY).
+</small>
+        </div>
+
+        <div class="form-group half">
+          <label>CVV</label>
+          <input type="password" formControlName="cvv" placeholder="123" maxlength="3" autocomplete="cc-csc">
+          <small class="error" *ngIf="paymentForm.get('cvv')?.touched && paymentForm.get('cvv')?.invalid">
+            Invalid CVV.
+          </small>
+        </div>
+      </div>
+
+      <button type="submit" class="pay-btn" [disabled]="isProcessing">
+        <span *ngIf="!isProcessing">Pay ₹{{ paymentAmount }}</span>
+        <span *ngIf="isProcessing" class="loader">Processing...</span>
+      </button>
+
+    </form>
+
+  </div>
+</div>

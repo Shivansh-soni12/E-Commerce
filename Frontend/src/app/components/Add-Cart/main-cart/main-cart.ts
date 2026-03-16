@@ -30,7 +30,7 @@ export class MainCart implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // 1. Subscribe to the user stream for real-time DB updates
+   
     this.userSub = this.userService.currentUser$.subscribe(user => {
       this.loggedInUser = user;
       if (!user && !localStorage.getItem('token')) {
@@ -38,18 +38,15 @@ export class MainCart implements OnInit, OnDestroy {
       }
     });
     this.cartService.cart$.subscribe(() => {
-    this.cdr.detectChanges(); // 3. Manually tell Angular to check again
+    this.cdr.detectChanges(); 
   });
   }
 
-  // Helper for Template
   isCartEmpty(): boolean {
     return !this.loggedInUser?.cart || this.loggedInUser.cart.length === 0;
   }
 
-  // --- QUANTITY LOGIC ---
   onIncrease(item: any) {
-    // Uses the fixed productId logic in UserService
     this.userService.addToCart(item);
   }
 
@@ -57,7 +54,6 @@ export class MainCart implements OnInit, OnDestroy {
     if (item.quantity > 1) {
       const user = this.loggedInUser;
       if (user && user.cart) {
-        // Find by productId to ensure we match MongoDB structure
         const target = user.cart.find((i: any) => i.productId === item.productId);
         if (target) {
           target.quantity -= 1;
@@ -77,20 +73,15 @@ export class MainCart implements OnInit, OnDestroy {
     }
   }
 
-  // --- WISHLIST TO CART LOGIC (No Duplicates) ---
   moveToCart(item: any) {
     if (this.loggedInUser) {
       const pId = item.productId || item._id || item.id;
 
-      // 1. Add to Cart using our unified logic (handles existing productId)
       this.userService.addToCart(item);
 
-      // 2. Remove from Wishlist locally
       this.loggedInUser.wishlist = this.loggedInUser.wishlist.filter(
         (i: any) => (i.productId || i._id || i.id) !== pId
       );
-
-      // 3. Sync the Wishlist removal to DB
       this.userService.updateProfile(this.loggedInUser).subscribe();
     }
   }

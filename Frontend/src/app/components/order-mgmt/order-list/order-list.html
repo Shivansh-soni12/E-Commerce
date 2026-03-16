@@ -1,8 +1,3 @@
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <h2>Order History</h2>
-
-</div>
-
 <div class="list-container">
   
   <form [formGroup]="searchForm" class="filter-bar">
@@ -13,41 +8,62 @@
       <option value="shipped">Shipped</option>
       <option value="delivered">Delivered</option>
       <option value="cancelled">Cancelled</option>
+      <option value="returned">Returned</option>
     </select>
   </form>
 
-  <div class="orders-grid" *ngIf="orders.length > 0">
+  <div class="orders-grid" *ngIf="filteredOrders.length > 0">
     <div class="order-card" 
-         *ngFor="let order of orders"
+         *ngFor="let order of filteredOrders" 
          [routerLink]="['/orders/detail', order.id]" 
-         style="cursor: pointer;">
+         [ngClass]="order.status.toLowerCase()"
+         style="cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column;">
          
-      <div class="card-header">
-        <span>#{{ order.id }}</span>
-        <span class="badge" [ngClass]="(order.status || 'pending').toLowerCase()">
+      <div class="card-header" style="padding: 15px 15px 10px 15px;">
+        <span class="order-id">#{{ order.id }}</span>
+        <span class="badge" [ngClass]="order.status.toLowerCase()">
           {{ order.status }}
         </span>
       </div>
       
-      <div class="card-body">
+      <div class="card-body" style="padding: 0 15px; flex-grow: 1;">
          <div class="item-row" *ngFor="let item of order.productDetails">
-            <img [src]="item.imageUrl || 'assets/img/placeholder.png'" alt="product" class="thumb">
             <div class="item-text">
-              <p class="p-name">{{ item.name }}</p>
-              <p class="p-qty">Qty: {{ item.quantity }}</p>
+              <p class="p-name" style="margin: 0; font-weight: 500;">{{ item.name }}</p>
+              <p class="p-qty" style="margin: 4px 0; font-size: 0.85em; opacity: 0.7;">Qty: {{ item.quantity }}</p>
             </div>
+         </div>
+
+         <div class="status-meta" style="margin-top: 8px;">
+            <small class="eta-text" *ngIf="order.status.toLowerCase() !== 'delivered' && order.status.toLowerCase() !== 'returned' && order.status.toLowerCase() !== 'cancelled'">
+              ETA: {{ order.eta | date:'mediumDate' }}
+            </small>
+            <small class="eta-text" *ngIf="order.status.toLowerCase() === 'delivered'" style="color: #27ae60; font-weight: bold;">
+              ✓ Delivered
+            </small>
+            <small class="eta-text" *ngIf="order.status.toLowerCase() === 'returned'" style="color: #e67e22; font-weight: bold;">
+              ↺ Returned
+            </small>
          </div>
       </div>
       
-      <div class="card-footer">
-        <span class="date">{{ order.date | date: "mediumDate" }}</span>
-        <strong class="total">{{ order.totalAmount | currency:'INR' }}</strong>
+      <div class="card-footer" style="padding: 10px 15px 15px 15px; display: flex; justify-content: space-between; align-items: center;">
+        <span class="date" style="font-size: 0.9em; opacity: 0.6;">{{ order.date | date: "mediumDate" }}</span>
+        <strong class="total" style="font-size: 1.1em;">{{ order.totalAmount | currency:'INR' }}</strong>
+      </div>
+
+      <div class="delivery-progress" style="width: 100%; height: 6px; background: #333;">
+        <div class="progress-fill" 
+             [style.width]="order.status === 'returned' || order.status === 'cancelled' ? '100%' : order.progressWidth"
+             [style.background]="getStatusColor(order.status)"
+             style="height: 100%; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);">
+        </div>
       </div>
 
     </div>
   </div>
 
-  <div *ngIf="orders.length === 0" class="no-data">
-    <p>No orders found. (Checking database...)</p>
+  <div *ngIf="filteredOrders.length === 0" class="no-data">
+    <p>No orders match your search.</p>
   </div>
 </div>

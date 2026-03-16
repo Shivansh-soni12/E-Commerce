@@ -1,7 +1,7 @@
 <h2>Order Dashboard</h2>
 
 <div class="dashboard-stats">
-  <div class="stat-card" routerLink="history">
+  <div class="stat-card" routerLink="history" style="cursor: pointer;">
     <h3>Total Orders</h3>
     <p class="big-number">{{ stats.totalOrders }}</p>
   </div>
@@ -11,7 +11,5 @@
     <p class="big-number">{{ stats.pendingCount }}</p>
   </div>
 </div>
-
-
 
 <router-outlet></router-outlet>
