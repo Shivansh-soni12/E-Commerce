@@ -1,0 +1,45 @@
+<div class="form-card">
+  <h3 class="form-title">✏️ Edit Product</h3>
+
+  <form *ngIf="product" #editForm="ngForm" (ngSubmit)="onSubmit()" class="admin-form">
+    
+    <label>Product Name
+      <input type="text" [(ngModel)]="product.name" name="name" required />
+    </label>
+    
+    <label>Description
+      <textarea [(ngModel)]="product.description" name="description" required></textarea>
+    </label>
+    
+    <label>Price
+      <input type="number" [(ngModel)]="product.price" name="price" required />
+    </label>
+    
+    <label>Category
+      <select [(ngModel)]="product.category" name="category" required>
+        <option *ngFor="let cat of ['Electronics', 'Computers', 'Wearables', 'Accessories']" [value]="cat">{{cat}}</option>
+      </select>
+    </label>
+
+    <label>Brand
+      <select [(ngModel)]="product.brand" name="brand" required>
+        <option *ngFor="let b of categoryBrands[product.category || '']" [value]="b">{{ b }}</option>
+      </select>
+    </label>
+
+    <div class="image-upload-section">
+      <label>Update Image (Optional)</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+      <p class="hint">Current image will be kept if you don't choose a new one.</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="save-btn" [disabled]="editForm.invalid || isSubmitting || !canSave()">
+        <span *ngIf="!isSubmitting">💾 Save Changes</span>
+        <span *ngIf="isSubmitting">Updating...</span>
+      </button>
+      
+      <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+    </div>
+  </form>
+</div>

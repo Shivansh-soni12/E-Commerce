@@ -1,0 +1,40 @@
+<div class="profile-container">
+  <h2 class="profile-title">My Profile</h2>
+
+<div *ngIf="!isEditing" class="profile-view">
+    <p><strong>Name:</strong> {{ profileData?.name }}</p>
+    <p><strong>Email:</strong> {{ profileData?.email }}</p>
+    <p><strong>Shipping Address:</strong> {{ profileData?.shippingAddress }}</p>
+    <button class="btn edit-btn" (click)="enableEdit()">Edit Profile</button>
+  </div>
+ 
+  <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="saveChanges()" class="profile-form">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" formControlName="name" />
+    </div>
+ 
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" />
+    </div>
+ 
+    <div class="form-group">
+      <label for="shippingAddress">Shipping Address</label>
+      <textarea id="shippingAddress" formControlName="shippingAddress"></textarea>
+    </div>
+ 
+    <div class="form-group">
+      <label for="paymentDetails">Payment Details</label>
+      <input id="paymentDetails" formControlName="paymentDetails" />
+    </div>
+ 
+    <div class="form-actions">
+      <button type="submit" class="btn save-btn" [disabled]="profileForm.pristine || profileForm.invalid">Save Changes</button>
+      <button type="button" class="btn cancel-btn" (click)="cancel()">Cancel</button>
+    </div>
+    
+  </form>
+</div>
+ 
+ 

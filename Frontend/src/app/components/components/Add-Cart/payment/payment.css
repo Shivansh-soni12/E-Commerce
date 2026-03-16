@@ -1,0 +1,132 @@
+.payment-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 20px;
+}
+
+.payment-container {
+  width: 100%;
+  max-width: 450px;
+  background: #121212;
+  border: 1px solid #2a2a2a;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  padding: 30px;
+  animation: dropIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.payment-header h3 {
+  font-size: 18px;
+  color: white;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.amount-badge {
+  background: rgba(163, 255, 51, 0.15); 
+  color: #a3ff33;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.half {
+  flex: 1;
+}
+
+label {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+input {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent, #a3ff33); 
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.error {
+  color: #ff4d4d;
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.pay-btn {
+  background: var(--accent, #a3ff33);
+  color: #000;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.pay-btn:disabled {
+  background: #555;
+  color: #888;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pay-btn:not(:disabled):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(163, 255, 51, 0.2);
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}

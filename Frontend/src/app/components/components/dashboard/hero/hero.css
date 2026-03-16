@@ -1,0 +1,186 @@
+
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.hero-banner {
+  width: 100%;
+  padding: 80px 20px 50px;
+  background: radial-gradient(
+    circle at 50% 0%,
+    color-mix(in oklab, var(--accent) 18%, transparent),
+    transparent 70%
+  );
+  text-align: center;
+  animation: fadeSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-title {
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+  line-height: 1.2;
+  text-shadow: 0 0 25px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+.animated-text {
+  display: inline-block;
+  animation: floatText 3s ease-in-out infinite alternate;
+  font-weight: 500;
+}
+
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: -20px auto 40px;
+  padding: 0 20px;
+  max-width: 800px;
+}
+
+.controls input, 
+.controls select {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid color-mix(in oklab, var(--text) 15%, transparent);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.controls input::placeholder {
+  color: color-mix(in oklab, var(--text) 50%, transparent);
+  opacity: 0.8;
+}
+
+.controls input {
+  flex: 2;
+}
+
+.controls select {
+  flex: 1;
+  cursor: pointer;
+}
+
+
+.controls input:focus, 
+.controls select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px color-mix(in oklab, var(--accent) 25%, transparent);
+  transform: translateY(-2px);
+}
+
+.product-list {
+  width: min(1000px, 90vw);
+  margin: 40px auto 70px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 28px;                 
+  align-items: stretch;     
+  overflow: visible;       
+  animation: productFadeIn 0.8s ease-out;
+}
+
+app-product-card {
+  display: block;
+  height: 100%;            
+}
+
+@keyframes floatText {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-10px); }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes productFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+@media (max-width: 1100px) {
+  .product-list { gap: 24px; }
+}
+
+@media (max-width: 820px) {
+  .product-list { grid-template-columns: repeat(2, 1fr); }
+  .controls { flex-direction: column; width: 100%; gap: 12px; }
+  .controls input, .controls select { width: 100%; }
+}
+
+@media (max-width: 520px) {
+  .product-list { grid-template-columns: 1fr; gap: 20px; }
+  .hero-title { font-size: clamp(26px, 8vw, 36px); }
+}
+
+.no-data-container {
+  grid-column: 1 / -1; 
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+  border-radius: 20px;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 600px;
+  animation: productFadeIn 0.6s ease-out;
+}
+
+.no-data-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+  display: block;
+  filter: drop-shadow(0 0 15px color-mix(in oklab, var(--accent) 40%, transparent));
+}
+
+.no-data-container h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+.no-data-container p {
+  color: color-mix(in oklab, var(--text) 60%, transparent);
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+.clear-btn {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+.clear-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px color-mix(in oklab, var(--accent) 50%, transparent);
+}
+
+.clear-btn:active {
+  transform: translateY(0);
+}

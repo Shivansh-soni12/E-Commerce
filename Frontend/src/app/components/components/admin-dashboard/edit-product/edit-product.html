@@ -1,0 +1,38 @@
+<div class="edit-section">
+  <h3 class="form-title">✏️ Edit Products</h3>
+
+  <div class="controls">
+    <input
+      type="text"
+      placeholder="Search products..."
+      [(ngModel)]="searchTerm"
+    />
+
+    <select [(ngModel)]="sortCategory">
+      <option value="">All Categories</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Computers">Computers</option>
+      <option value="Wearables">Wearables</option>
+      <option value="Accessories">Accessories</option>
+    </select>
+  </div>
+
+  <div class="card-container">
+    <div class="product-card" *ngFor="let p of filteredProducts">
+      <div class="card-header">
+        <h4>
+          <span class="brand-display">{{ p.brand }}</span> {{ p.name }}
+        </h4>
+        
+        <div class="actions">
+          <button class="edit-btn" (click)="goToEdit(p.id)">Edit</button>
+          <button class="delete-btn" (click)="goToDelete(p.id)">Delete</button>
+        </div>
+      </div>
+
+      <p>{{ p.description }}</p>
+      <p>₹{{ p.price }}</p>
+      <p class="category-tag">{{ p.category || 'Uncategorized' }}</p>
+    </div>
+  </div>
+</div>

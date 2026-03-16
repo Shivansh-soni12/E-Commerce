@@ -1,0 +1,17 @@
+<div class="dashboard-header">
+  <h2>Order Dashboard</h2>
+  <small>Live Status (as of {{ today | date:'shortTime' }})</small>
+</div>
+
+<div class="dashboard-stats">
+  <div class="stat-card" routerLink="history">
+    <h3>Total Orders</h3>
+    <p class="big-number">{{ stats.totalOrders }}</p>
+  </div>
+
+  <div class="stat-card2">
+    <h3>Pending Delivery</h3>
+    <p class="big-number">{{ stats.pendingCount }}</p>
+  </div>
+</div>
+<router-outlet></router-outlet>

@@ -1,0 +1,26 @@
+<div class="form-card">
+  <h3 class="form-title">➕ Add New Product</h3>
+  <form #addForm="ngForm" (ngSubmit)="onSubmit()" class="admin-form">
+    
+    <input type="text" [(ngModel)]="newProduct.name" name="name" placeholder="Product Name" required />
+    <input type="text" [(ngModel)]="newProduct.description" name="description" placeholder="Description" required />
+    <input type="number" [(ngModel)]="newProduct.price" name="price" placeholder="Price" required />
+
+    <select [(ngModel)]="newProduct.category" name="category" required>
+      <option value="" disabled selected>-- Select Category --</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Computers">Computers</option>
+      <option value="Wearables">Wearables</option>
+      <option value="Accessories">Accessories</option>
+    </select>
+
+    <select [(ngModel)]="newProduct.brand" name="brand" required *ngIf="newProduct.category">
+      <option value="" disabled selected>-- Select Brand --</option>
+      <option *ngFor="let b of categoryBrands[newProduct.category || '']" [value]="b">{{b}}</option>
+    </select>
+
+    <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+
+    <button type="submit" [disabled]="addForm.invalid || !selectedFile">Add Product</button>
+  </form>
+</div>

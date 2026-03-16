@@ -1,0 +1,100 @@
+
+:host {
+  display: block;
+  width: 100%;
+  padding: 20px 0 60px; 
+  box-sizing: border-box;
+}
+
+h1, div > h2 {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: var(--text);
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 15px color-mix(in oklab, var(--accent) 25%, transparent);
+  animation: fadeIn 0.4s ease-out;
+}
+
+div > h2 {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+  line-height: 1.2;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.cart-summary-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px; 
+  gap: 30px;                     
+  width: min(1200px, 95vw);        
+  margin: 0 auto;
+  align-items: start;              
+  animation: slideUp 0.4s ease-out;
+}
+
+app-cart,
+app-order-summary,
+app-wishlist,
+app-empty-cart {
+  display: block;
+  width: 100%;
+}
+
+app-order-summary {
+  position: sticky;
+  top: 20px; 
+}
+
+app-wishlist {
+  width: min(1200px, 95vw);
+  margin: 50px auto 0;
+  padding-top: 30px;
+  border-top: 1px solid #222;
+  animation: fadeIn 0.6s ease-out;
+}
+
+app-empty-cart {
+  margin: 40px auto;
+  max-width: 450px;
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+@media (max-width: 980px) {
+  .cart-summary-layout {
+    grid-template-columns: 1fr; 
+    width: min(700px, 92vw);
+  }
+  
+  app-order-summary {
+    position: static;
+    order: 2;     
+  }
+  
+  app-cart {
+    order: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  h1 { font-size: 20px; }
+  :host { padding: 15px 10px; }
+}

@@ -1,0 +1,62 @@
+:host {
+  display: block;
+  background-color: #050505; 
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: white;
+}
+h2 {
+  text-align: center;
+  padding-top: 20px;
+}
+.dashboard-stats { 
+  display: flex; 
+  gap: 24px; 
+  padding: 30px; 
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+
+
+
+.stat-card,.stat-card2{ 
+  flex: 1; 
+  min-width: 250px; 
+  background: #121212; /* Dark Card Bg */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+  border-radius: 16px; 
+  padding: 30px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover Effect: The "Neon Power Up" */
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #a855f7; /* Purple Border */
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); /* Purple Glow */
+}
+
+/* Text Styling */
+.stat-card h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #a3a3a3; /* Dimmed Text */
+}
+
+.big-number { 
+  font-size: 3.5rem; 
+  font-weight: 700; 
+  margin: 10px 0 0 0; 
+  color: #ffffff;
+  /* Subtle text shadow to make the number pop */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.1); 
+}
+
+/* Remove the old gradient classes (.blue, .green) since we are using a unified dark theme */

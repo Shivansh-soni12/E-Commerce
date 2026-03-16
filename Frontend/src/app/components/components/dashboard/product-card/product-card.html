@@ -1,0 +1,10 @@
+<div class="product-card">
+  <img [src]="'http://localhost:5000' + product.imageUrl" [alt]="product.name">
+  
+  <h3 class="product-name">{{ product.name }}</h3>
+  <p class="description">{{ product.description }}</p>
+  <p class="price">₹{{ product.price }}</p>
+  <p class="category">{{ product.category }}</p>
+  <button (click)="onAdd()">Add to Cart</button>
+  <button (click)="onAddWishList()">Add to WishList</button>
+</div>

@@ -1,0 +1,42 @@
+<div class="login-container">
+  <h2 class="login-title">Login</h2>
+ 
+  <form #loginForm="ngForm" (ngSubmit)="processLogin(loginForm)" class="login-form">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="Email"
+        required
+        email>
+      <small class="error" *ngIf="loginForm.controls['email']?.touched && loginForm.controls['email']?.errors?.['required']">
+        Email is required
+      </small>
+      <small class="error" *ngIf="loginForm.controls['email']?.touched && loginForm.controls['email']?.errors?.['email']">
+        Invalid email format
+      </small>
+    </div>
+ 
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        type="password"
+        placeholder="Password"
+        required
+        >
+      <small class="error" *ngIf="loginForm.controls['password']?.touched && loginForm.controls['password']?.errors?.['required']">
+        Password is required
+      </small>
+    </div>
+ 
+    <div class="form-actions">
+      <button type="submit" class="btn login-btn" [disabled]="loginForm.invalid">Login</button>
+    </div>
+  </form>
+</div>
+ 

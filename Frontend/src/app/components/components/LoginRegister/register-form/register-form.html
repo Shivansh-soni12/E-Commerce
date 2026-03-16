@@ -1,0 +1,99 @@
+<div class="register-container">
+  <h2 class="register-title">Register</h2>
+ 
+  <form #registerForm="ngForm" (ngSubmit)="processRegister(registerForm)" class="register-form">
+   
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        name="name"
+        [(ngModel)]="name"
+        placeholder="Name"
+        required
+        pattern="^[A-Za-z\\s]+$">
+      <small class="error" *ngIf="registerForm.controls['name']?.touched && registerForm.controls['name']?.errors?.['required']">
+        Name is required
+      </small>
+      <small class="error" *ngIf="registerForm.controls['name']?.touched && registerForm.controls['name']?.errors?.['pattern']">
+        Name must contain only letters
+      </small>
+    </div>
+ 
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="Email"
+        required
+        email>
+      <small class="error" *ngIf="registerForm.controls['email']?.touched && registerForm.controls['email']?.errors?.['required']">
+        Email is required
+      </small>
+      <small class="error" *ngIf="registerForm.controls['email']?.touched && registerForm.controls['email']?.errors?.['email']">
+        Invalid email format
+      </small>
+    </div>
+ 
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        type="password"
+        placeholder="Password"
+        required
+        minlength="6"
+        pattern="^(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]+$">
+      <small class="error" *ngIf="registerForm.controls['password']?.touched && registerForm.controls['password']?.errors?.['required']">
+        Password is required
+      </small>
+      <small class="error" *ngIf="registerForm.controls['password']?.touched && registerForm.controls['password']?.errors?.['minlength']">
+        Password must be at least 6 characters
+      </small>
+      <small class="error" *ngIf="registerForm.controls['password']?.touched && registerForm.controls['password']?.errors?.['pattern']">
+        Must contain uppercase, number, and special character
+      </small>
+    </div>
+ 
+    <!-- Shipping Address -->
+    <div class="form-group">
+      <label for="shippingAddress">Shipping Address</label>
+      <input
+        id="shippingAddress"
+        name="shippingAddress"
+        [(ngModel)]="shippingAddress"
+        placeholder="Shipping Address"
+        required
+        minlength="10">
+      <small class="error" *ngIf="registerForm.controls['shippingAddress']?.touched && registerForm.controls['shippingAddress']?.invalid">
+        Shipping address is required (min 10 characters)
+      </small>
+    </div>
+ 
+    <!-- Payment Details -->
+    <div class="form-group">
+      <label for="paymentDetails">Payment Details</label>
+      <input
+        id="paymentDetails"
+        name="paymentDetails"
+        [(ngModel)]="paymentDetails"
+        placeholder="Payment Details"
+        required>
+      <small class="error" *ngIf="registerForm.controls['paymentDetails']?.touched && registerForm.controls['paymentDetails']?.invalid">
+        Payment details are required
+      </small>
+    </div>
+ 
+    <div class="form-actions">
+      <button type="submit" class="btn register-btn" [disabled]="registerForm.invalid">Register</button>
+    </div>
+  </form>
+</div>
+ 
+ 

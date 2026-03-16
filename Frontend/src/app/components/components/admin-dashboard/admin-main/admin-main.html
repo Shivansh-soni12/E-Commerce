@@ -1,0 +1,20 @@
+<div class="navbar">
+<div class="nav-brand">
+  <ng-container *ngIf="currentUser$ | async as user; else fallback">
+    👤 Admin, {{ user.name }}
+  </ng-container>
+
+  <ng-template #fallback>
+    🛒 Product Manager
+  </ng-template>
+</div>  <div class="nav-links">
+    <a routerLink="products" routerLinkActive="active" class="nav-item">🏠 Products</a>
+    <a routerLink="add" routerLinkActive="active" class="nav-item">➕ Add Product</a>
+    <a routerLink="manage" routerLinkActive="active" class="nav-item">✏️🗑️ Manage Products</a>
+    <button class="logout-btn" (click)="logout()">🚪 Logout</button>
+  </div>
+</div>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
