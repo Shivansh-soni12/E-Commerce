@@ -1,9 +1,10 @@
 export interface Product {
-  _id?: string; // MongoDB ObjectId as string
-  id: number; // Keep this for frontend logic, but backend will use _id
+  _id?: string; 
+  id: number; 
   name: string;
   description: string;
   price: number;
   imageUrl: string;
-  category?: string;
+  category: string;
+  brand: string; 
 }

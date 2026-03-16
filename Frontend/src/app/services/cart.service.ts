@@ -15,37 +15,45 @@ export class CartService {
     return this.injector.get(UserService);
   }
 
-  // The method Hero.ts is looking for
+private syncToDb() {
+  this.cartSubject.next([...this.cart]);
   
-  private syncToDb() {
-    this.cartSubject.next([...this.cart]);
-    const user = this.userService.loggedInUser;
-    if (user) {
-      const updatedUser = { ...user, cart: this.cart };
-      this.userService.updateProfile(updatedUser).subscribe({
-        next: (res) => this.userService.updateLocalUser(res.user),
-        error: (err) => console.error("Database sync failed", err)
-      });
-    }
+  const user = this.userService.loggedInUser;
+  if (user) {
+    const updatedUser = { ...user, cart: this.cart };
+    this.userService.updateProfile(updatedUser).subscribe({
+      next: (res) => {
+          console.log("Cart synced successfully");
+      },
+      error: (err) => console.error("Database sync failed", err)
+    });
+  }
+}
+
+addItem(product: any) {
+  const pId = product.productId || product._id || product.id;
+  
+  const user = this.userService.loggedInUser;
+  if (user && user.cart) {
+      this.cart = [...user.cart]; 
   }
 
-  addItem(product: any) {
-    const pId = product.productId || product._id || product.id;
-    const existing = this.cart.find(i => (i as any).productId === pId);
+  const existing = this.cart.find(i => String(i.productId) === String(pId));
 
-    if (existing) {
-      existing.quantity++;
-    } else {
-      this.cart.push({
-        productId: pId, // Essential for MongoDB
-        name: product.name,
-        price: product.price,
-        image: product.image || '',
-        quantity: 1
-      } as any);
-    }
-    this.syncToDb();
+  if (existing) {
+    existing.quantity++;
+  } else {
+    this.cart.push({
+      productId: pId, 
+      name: product.name,
+      price: product.price,
+      image: product.imageUrl || product.image || '', 
+      quantity: 1
+    });
   }
+  
+  this.syncToDb();
+}
 
   removeItem(productId: string) {
     const item = this.cart.find(i => (i as any).productId === productId);

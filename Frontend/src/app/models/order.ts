@@ -11,7 +11,6 @@ export interface OrderItem {
   productId: number; 
   quantity: number;
   priceAtPurchase: number;
-  
 }
 
 export interface Order {
@@ -21,6 +20,7 @@ export interface Order {
   totalAmount: number;
   date?: any;
   createdAt?: any;          
+  eta?: any;               // Estimated Time of Arrival (+2 days)
   shippingAddress?: string; 
   paymentMethod?: string;   
   items?: any[];
