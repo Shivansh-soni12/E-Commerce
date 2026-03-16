@@ -1,11 +1,13 @@
 const Product = require("../models/Product");
+
 const addProduct = async (req, res) => {
   try {
-    const { name, description, price, category } = req.body;
+    
+    const { name, description, price, category, brand } = req.body;
 
     console.log("Uploaded File:", req.file); 
 
-    let imageUrl = "assets/image.png";
+   
     if (req.file) {
       imageUrl = `/uploads/${req.file.filename}`; 
     }
@@ -15,6 +17,7 @@ const addProduct = async (req, res) => {
       description, 
       price, 
       category, 
+      brand, 
       imageUrl  
     });
 
@@ -39,6 +42,7 @@ const getProductByIdOrName = async (req, res) => {
     const { prodID_OR_ProdName } = req.params;
     let product;
 
+   
     if (prodID_OR_ProdName.match(/^[0-9a-fA-F]{24}$/)) {
       product = await Product.findById(prodID_OR_ProdName);
     } else {
@@ -56,28 +60,22 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     
-    const updateData = { ...req.body };
+    const updateData = { ...req.body }; 
 
     if (req.file) {
+   
       updateData.imageUrl = `/uploads/${req.file.filename}`;
     }
 
-    const product = await Product.findByIdAndUpdate(
-      id, 
-      updateData, 
-      { new: true, runValidators: true } 
-    );
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
+    const product = await Product.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+    
+    if (!product) return res.status(404).json({ message: "Product not found" });
     res.json(product);
   } catch (error) {
-    console.error("Update Error:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;

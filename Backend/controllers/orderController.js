@@ -1,111 +1,38 @@
 const Order = require("../models/Order");
 
+// 1. Get Stats for User Dashboard
 const getOrderStats = async (req, res) => {
   try {
     const { userId } = req.params;
+    
+    // Count all orders for this user
     const totalOrders = await Order.countDocuments({ userId });
-    const pendingCount = await Order.countDocuments({ userId, status: "pending" });
+
+   
+    const pendingCount = await Order.countDocuments({ 
+      userId, 
+      status: { $in: ["pending", "shipped"] } 
+    });
+
     res.json({ totalOrders, pendingCount });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-const getOrderById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const order = await Order.findById(id).populate("items.productId", "name price");
-    if (!order) return res.status(404).json({ message: "Order not found" });
-    res.json(order);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
-
-// controllers/orderController.js
-const updateOrderStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-const status = req.body.status?.toLowerCase();
-    const { reason } = req.body;
-     
-
-    if (!req.user) return res.status(401).json({ message: "Not authorized" });
-
-    const order = await Order.findById(id);
-    if (!order) return res.status(404).json({ message: "Order not found" });
-
-    // FIXED ID COMPARISON:
-    // 1. Changed req.user._id to req.user.id (to match your middleware)
-    // 2. Added optional chaining (?.) to prevent crashes if something is missing
-    const isOwner = order.userId?.toString() === req.user.id?.toString();
-    const isAdmin = req.user.role === 'admin';
-
-    if (!isAdmin && !isOwner) {
-      return res.status(403).json({ message: "No permission to update this order" });
-    }
-
-    // Update fields
-    order.status = status;
-    if (reason) {
-      order.cancelReason = reason; 
-    }
-    
-    await order.save();
-    console.log(`Order ${id} successfully updated to ${status}`);
-    res.status(200).json(order);
-
-  } catch (error) {
-    console.error("CANNOT UPDATE ORDER:", error);
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
-  }
-};
-
-const returnOrder = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const order = await Order.findById(id);
-    if (!order) return res.status(404).json({ message: "Order not found" });
-
-    // Check if user is the owner
-    const isOwner = order.userId.toString() === req.user._id.toString();
-    if (!isOwner) {
-      return res.status(403).json({ message: "You can only return your own orders" });
-    }
-
-    // Only allow return if it was actually delivered
-    if (order.status !== 'delivered') {
-      return res.status(400).json({ message: "Only delivered orders can be returned" });
-    }
-
-    order.status = 'returned'; // Make sure 'returned' is in your Schema Enum!
-    await order.save();
-
-    res.status(200).json(order);
-  } catch (error) {
-    console.error("Return Error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
-};
-
-
+// 2. Create New Order
 const createOrder = async (req, res) => {
   try {
     const orderData = {
       userId: req.body.userId,
       items: req.body.items.map(item => ({
         productId: item.productId,
-        name: item.name,      
-        price: item.price,    
-        image: item.image,   
-        quantity: item.quantity
+        quantity: item.quantity,
+        priceAtPurchase: item.price 
       })),
       totalAmount: req.body.totalAmount,
       shippingAddress: req.body.shippingAddress,
-      status: "pending"
+      status: "pending" // Default status
     };
 
     const order = new Order(orderData);
@@ -116,6 +43,70 @@ const createOrder = async (req, res) => {
   }
 };
 
+// 3. Update Order Status (Admin or User cancel)
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+   
+    const status = req.body.status?.toLowerCase().trim();
+    const { reason } = req.body;
+
+    if (!req.user) return res.status(401).json({ message: "Not authorized" });
+
+    const order = await Order.findById(id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Authorization check
+    const isOwner = order.userId.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({ message: "No permission to update this order" });
+    }
+
+    order.status = status;
+    if (reason) {
+      order.cancelReason = reason; 
+    }
+    
+    await order.save();
+    console.log(`Order ${id} successfully updated to ${status}`);
+    res.status(200).json(order);
+
+  } catch (error) {
+    console.error("UPDATE ERROR:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+// 4. Return Order Logic
+const returnOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id);
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Owner check
+    if (order.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "You can only return your own orders" });
+    }
+
+    // Return only allowed if delivered
+    if (order.status !== 'delivered') {
+      return res.status(400).json({ message: "Only delivered orders can be returned" });
+    }
+
+    order.status = 'returned';
+    await order.save();
+
+    res.status(200).json(order);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// 5. Fetching Methods
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
@@ -131,8 +122,20 @@ const getOrdersByUser = async (req, res) => {
   try {
     const { userId } = req.params;
     const orders = await Order.find({ userId })
-      .populate("items.productId", "name price");
+      .populate("items.productId", "name price")
+      .sort({ createdAt: -1 }); // Newest first
     res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getOrderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id).populate("items.productId", "name price");
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    res.json(order);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -161,6 +164,16 @@ const updateOrder = async (req, res) => {
   }
 };
 
+const deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Order.findByIdAndDelete(id);
+    res.json({ message: "Order deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrders,
@@ -170,5 +183,6 @@ module.exports = {
   getOrderStats,
   getOrderById,
   updateOrderStatus,
-  returnOrder
+  returnOrder,
+  deleteOrder
 };

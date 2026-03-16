@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  // Try to get token from cookies first
   const token = req.cookies.token;
 
   if (!token) {
@@ -10,13 +9,17 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // CRITICAL: Make sure 'id' matches what you put in the payload during login
-    req.user = { id: decoded.id }; 
+    
+    // UPDATED: Include role so isAdmin can verify it
+    req.user = { 
+      id: decoded.id,
+      role: decoded.role 
+    }; 
+    
     next();
   } catch (error) {
     res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
 
-
-module.exports={authMiddleware};
+module.exports = { authMiddleware };

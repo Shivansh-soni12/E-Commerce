@@ -8,7 +8,7 @@ const {
   getUserById,
   checkMe
 } = require("../controllers/userController");
-const { authMiddleware } = require('../middleware/AuthMiddleware');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
