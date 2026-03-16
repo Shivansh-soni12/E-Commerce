@@ -22,19 +22,75 @@ const getOrderById = async (req, res) => {
   }
 };
 
+
+
+// controllers/orderController.js
 const updateOrderStatus = async (req, res) => {
   try {
-    const { status, reason } = req.body;
-    const order = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status: status, cancellationReason: reason },
-      { new: true }
-    );
+    const { id } = req.params;
+const status = req.body.status?.toLowerCase();
+    const { reason } = req.body;
+     
+
+    if (!req.user) return res.status(401).json({ message: "Not authorized" });
+
+    const order = await Order.findById(id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // FIXED ID COMPARISON:
+    // 1. Changed req.user._id to req.user.id (to match your middleware)
+    // 2. Added optional chaining (?.) to prevent crashes if something is missing
+    const isOwner = order.userId?.toString() === req.user.id?.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({ message: "No permission to update this order" });
+    }
+
+    // Update fields
+    order.status = status;
+    if (reason) {
+      order.cancelReason = reason; 
+    }
+    
+    await order.save();
+    console.log(`Order ${id} successfully updated to ${status}`);
     res.status(200).json(order);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("CANNOT UPDATE ORDER:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
+const returnOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findById(id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Check if user is the owner
+    const isOwner = order.userId.toString() === req.user._id.toString();
+    if (!isOwner) {
+      return res.status(403).json({ message: "You can only return your own orders" });
+    }
+
+    // Only allow return if it was actually delivered
+    if (order.status !== 'delivered') {
+      return res.status(400).json({ message: "Only delivered orders can be returned" });
+    }
+
+    order.status = 'returned'; // Make sure 'returned' is in your Schema Enum!
+    await order.save();
+
+    res.status(200).json(order);
+  } catch (error) {
+    console.error("Return Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 
 const createOrder = async (req, res) => {
   try {
@@ -113,5 +169,6 @@ module.exports = {
   updateOrder,
   getOrderStats,
   getOrderById,
-  updateOrderStatus
+  updateOrderStatus,
+  returnOrder
 };

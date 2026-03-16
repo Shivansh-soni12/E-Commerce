@@ -83,14 +83,35 @@ const logoutUser = async (req, res) => {
   }
 };
 
+
 const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id); 
     if (!user) return res.status(404).json({ message: "User not found" });
+
     if (req.body.name) user.name = req.body.name;
     if (req.body.email) user.email = req.body.email;
     if (req.body.shippingAddress !== undefined) user.shippingAddress = req.body.shippingAddress;
     if (req.body.paymentDetails !== undefined) user.paymentDetails = req.body.paymentDetails;
+
+    if (req.body.cart) {
+      user.cart = req.body.cart.map(item => ({
+        productId: item.productId || item._id || item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity || 1,
+        image: item.image || ""
+      }));
+    }
+
+    if (req.body.wishlist) {
+      user.wishlist = req.body.wishlist.map(item => ({
+        productId: item.productId || item._id || item.id,
+        name: item.name,
+        price: item.price,
+        image: item.image || ""
+      }));
+    }
 
     const updatedUser = await user.save();
 
@@ -108,8 +129,19 @@ const updateProfile = async (req, res) => {
       } 
     });
   } catch (error) {
+    console.error("Backend Update Error:", error.message);
     res.status(400).json({ message: error.message });
   }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, updateProfile, getUserById };
+const checkMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (error) {
+    res.status(401).json({ message: "Invalid session" });
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser, updateProfile, getUserById,checkMe };

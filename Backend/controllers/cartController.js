@@ -36,7 +36,6 @@ const addToCart = async (req, res) => {
   }
 };
 
-// Remove item from cart
 const removeFromCart = async (req, res) => {
   try {
     const { userId, itemId } = req.params;
@@ -54,7 +53,6 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-// Move item from cart to wishlist
 const moveCartToWishlist = async (req, res) => {
   try {
     const { userId, itemId } = req.params;
@@ -80,7 +78,6 @@ const moveCartToWishlist = async (req, res) => {
   }
 };
 
-// --- WISHLIST FUNCTIONS ---
 
 const getWishlist = async (req, res) => {
   try {
@@ -157,7 +154,6 @@ const moveWishlistToCart = async (req, res) => {
   }
 };
 
-// --- ORDER FUNCTIONS ---
 
 const placeOrder = async (req, res) => {
   try {
@@ -203,7 +199,6 @@ const getOrders = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // PREVENT 500 ERROR: Check if userId is valid
     if (!userId || userId === "undefined") {
       return res.status(400).json({ message: "Invalid or missing User ID" });
     }
