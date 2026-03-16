@@ -33,7 +33,6 @@ const getUserById = async (req, res) => {
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -44,24 +43,16 @@ const loginUser = async (req, res) => {
     const payload = { id: user._id, email: user.email, role: user.role };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.cookie('token', token, {
-      httpOnly: true,   
-      secure: process.env.NODE_ENV === 'production', 
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 1000 
-    });
-
+    // REMOVED: res.cookie logic
+    // ADDED: Send token in the JSON response body
     res.json({ 
       message: 'Login successful',
+      token: token, // <--- Frontend will catch this
       user: {
         id: user._id,
         name: user.name,
-        email: user.email,
         role: user.role,
-        cart: user.cart,
-        wishlist: user.wishlist,
-        shippingAddress: user.shippingAddress, 
-      paymentDetails: user.paymentDetails,   
+        // ... rest of user data
       }
     });
   } catch (err) {
@@ -144,4 +135,11 @@ const checkMe = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, updateProfile, getUserById,checkMe };
+module.exports = { 
+  registerUser, 
+  loginUser, 
+  logoutUser, 
+  updateProfile, 
+  getUserById, 
+  checkMe // <--- Double check this one!
+};

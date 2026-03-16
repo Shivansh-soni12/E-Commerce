@@ -13,7 +13,6 @@ const { authMiddleware } = require('../middleware/authMiddleware');
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", authMiddleware, logoutUser);
-
 router.get("/me", authMiddleware, checkMe);
 
 router.put('/profile/:id', authMiddleware, updateProfile);

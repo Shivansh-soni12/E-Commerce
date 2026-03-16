@@ -57,7 +57,7 @@ const updateOrderStatus = async (req, res) => {
     if (!order) return res.status(404).json({ message: "Order not found" });
 
     // Authorization check
-    const isOwner = order.userId.toString() === req.user._id.toString();
+const isOwner = order.userId?.toString() === req.user.id?.toString();
     const isAdmin = req.user.role === 'admin';
 
     if (!isAdmin && !isOwner) {
@@ -79,20 +79,22 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-// 4. Return Order Logic
 const returnOrder = async (req, res) => {
   try {
     const { id } = req.params;
-    const order = await Order.findById(id);
 
+    // 1. Check if user is attached (from authMiddleware)
+    if (!req.user) return res.status(401).json({ message: "Not authorized" });
+
+    const order = await Order.findById(id);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    // Owner check
-    if (order.userId.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: "You can only return your own orders" });
+    const isOwner = order.userId?.toString() === req.user.id?.toString();
+
+    if (!isOwner) {
+      return res.status(403).json({ message: "Only the owner can return this order" });
     }
 
-    // Return only allowed if delivered
     if (order.status !== 'delivered') {
       return res.status(400).json({ message: "Only delivered orders can be returned" });
     }
@@ -102,11 +104,11 @@ const returnOrder = async (req, res) => {
 
     res.status(200).json(order);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("RETURN ERROR:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
-// 5. Fetching Methods
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
