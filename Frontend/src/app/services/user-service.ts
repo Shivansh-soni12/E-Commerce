@@ -1,6 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import { BehaviorSubject, Observable, tap, map, of } from 'rxjs';
 import { User } from '../models/user';
 import { CartService } from './cart.service'; 
 import { Router } from '@angular/router';
@@ -9,79 +9,82 @@ import { Router } from '@angular/router';
 export class UserService {
   private apiUrl = 'http://localhost:5000/api/users'; 
   
-  private currentUserSubject = new BehaviorSubject<User | null>(this.getInitialUser());
+  // 1. SESSION STORAGE TOKEN
+  // This survives page refreshes in the SAME tab, 
+  // but is empty if the URL is pasted into a NEW tab.
+  private TOKEN_KEY = 'authToken';
+
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  private loggedUserId: string = '';
+  constructor(
+    private http: HttpClient, 
+    private injector: Injector, 
+    private router: Router
+  ) {}
 
-  constructor(private http: HttpClient, private injector: Injector, private router: Router) {
-    this.checkSession(); 
+  // Helper to expose the token to the Interceptor and Guard
+  public getToken(): string | null {
+    return sessionStorage.getItem(this.TOKEN_KEY);
   }
 
-  private getInitialUser(): User | null {
-    const id = sessionStorage.getItem('userId');
-    const role = sessionStorage.getItem('userRole');
-    if (id) {
-      return { id: id, role: role || 'user', name: 'Loading...' } as any;
-    }
-    return null;
-  }
-
-  public setLoggedUser(id: string, role: string = 'user') {
-    this.loggedUserId = id;
-    sessionStorage.setItem('userId', id);
-    sessionStorage.setItem('userRole', role);
-  }
-
-  public getLoggedUserId(): string {
-    const id = sessionStorage.getItem('userId');
-    this.loggedUserId = id || ''; 
-    return this.loggedUserId;
-  }
-
-  public checkSession() {
-    this.http.get<any>(`${this.apiUrl}/me`, { withCredentials: true }).subscribe({
-      next: (res) => {
-        this.updateLocalUser(res);
-      },
-      error: (err) => {
-        console.log("Server session check failed:", err.status);
-        
-        if (err.status === 401) {
-          this.logout();
-        } else {
-          
-          const id = sessionStorage.getItem('userId');
-          if (id) {
-            const role = sessionStorage.getItem('userRole') || 'user';
-            this.currentUserSubject.next({ id, role, name: 'User' } as any);
-          } else {
-            this.logout();
-          }
-        }
-      }
-    });
-  }
-
-  private get cartService(): CartService {
-    return this.injector.get(CartService);
+  public getLoggedUserId(): string | null {
+    return this.getToken() ? 'authenticated' : null;
   }
 
   public get loggedInUser(): User | null {
     return this.currentUserSubject.value;
   }
 
+  private get cartService(): CartService {
+    return this.injector.get(CartService);
+  }
+
+  /**
+   * LOGIN
+   * Captures the token and stores it in SessionStorage (Tab Memory).
+   */
+  login(credentials: any): Observable<User> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      map(response => {
+        // Store token in tab-specific memory
+        if (response.token) {
+          sessionStorage.setItem(this.TOKEN_KEY, response.token);
+        }
+        
+        const user = response.user;
+        return { ...user, id: user._id || user.id };
+      }),
+      tap(user => this.updateLocalUser(user))
+    );
+  }
+
+  /**
+   * SESSION CHECK
+   * Repopulates the currentUserSubject on refresh using the token in SessionStorage.
+   */
+  public checkSession() {
+    const token = this.getToken();
+    if (!token) {
+      this.logout();
+      return;
+    }
+
+    // Call /me to get fresh user data using the stored token
+    this.http.get<any>(`${this.apiUrl}/me`).subscribe({
+      next: (res) => {
+        this.updateLocalUser(res);
+      },
+      error: (err) => {
+        console.log("Session invalid or expired:", err.status);
+        this.logout();
+      }
+    });
+  }
+
   public updateLocalUser(user: any) {
     const userData = user.user ? user.user : user; 
-    
     this.currentUserSubject.next(userData);
-
-    const id = userData._id || userData.id;
-    const role = userData.role || 'user';
-
-    if (id) {
-      this.setLoggedUser(String(id), role);
-    }
 
     if (userData.cart) {
       this.cartService.setCart(userData.cart);
@@ -93,33 +96,40 @@ export class UserService {
   }
 
   getUserById(id: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}`, { withCredentials: true });
-  }
-
-  login(credentials: any): Observable<User> {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials, { withCredentials: true })
-      .pipe(
-        map(response => {
-          const user = response.user || response;
-          return {
-            ...user,
-            id: user._id || user.id,
-            role: user.role || 'user'
-          };
-        }),
-        tap(user => this.updateLocalUser(user))
-      );
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
   updateProfile(user: User): Observable<any> {
     const userId = user.id || (user as any)._id;
-    return this.http.put<any>(`${this.apiUrl}/profile/${userId}`, user, { withCredentials: true }).pipe(
+    return this.http.put<any>(`${this.apiUrl}/profile/${userId}`, user).pipe(
       tap(res => {
         if (res && res.user) {
           this.updateLocalUser(res.user);
         }
       })
     );
+  }
+
+  /**
+   * LOGOUT
+   * Completely clears the tab memory.
+   */
+  logout() {
+    // Optional: notify backend
+    this.http.post(`${this.apiUrl}/logout`, {}).subscribe();
+
+    sessionStorage.clear(); // Wipes token and all tab data
+    this.currentUserSubject.next(null);
+    this.cartService.clearCart();
+    
+    this.router.navigate(['/login']);
+  }
+
+  // --- Utility Methods ---
+
+  public isAuthenticated$(): Observable<boolean> {
+    // Check if we have a token in the tab
+    return of(!!this.getToken());
   }
 
   addToCart(product: any) {
@@ -187,14 +197,5 @@ export class UserService {
     this.updateProfile({ ...user, wishlist: updatedWishlist }).subscribe({
       next: (res) => this.updateLocalUser(res)
     });
-  }
-
-  logout() {
-    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe();
-    this.currentUserSubject.next(null);
-    this.loggedUserId = '';
-    sessionStorage.clear(); 
-    this.cartService.clearCart();
-    this.router.navigate(['/login']);
   }
 }
