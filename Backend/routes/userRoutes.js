@@ -5,13 +5,17 @@ const {
   loginUser, 
   logoutUser, 
   updateProfile,
-  getUserById
+  getUserById,
+  checkMe
 } = require("../controllers/userController");
 const { authMiddleware } = require('../middleware/AuthMiddleware');
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", authMiddleware, logoutUser);
+
+router.get("/me", authMiddleware, checkMe);
+
 router.put('/profile/:id', authMiddleware, updateProfile);
 router.get("/:id", authMiddleware, getUserById);
 
